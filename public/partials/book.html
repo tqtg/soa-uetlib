@@ -1,0 +1,21 @@
+<div class="container" ng-controller="BookCtrl">
+    <div class="row col-md-12">
+        <div>
+            <input type="text" class="form-control input-lg" placeholder="Enter a book title" ng-keypress="save($event)" ng-model="bookInput">
+        </div>
+    </div>
+    <div class="row col-md-12 books">
+        <h3>Book list:</h3>
+        <div ng-repeat="book in books" class="book col-md-12 col-sm-12 col-xs-12" >
+            <div class="col-md-8 col-sm-8 col-xs-8">
+                <span ng-show="!isEditable[$index]">{{book.title}}</span>
+                <input ng-show="isEditable[$index]" type="text" value="{{book.title}}" ng-keypress="edit($event, $index);">
+                <input ng-show="isEditable[$index]" type="button" class="btn btn-warning" value="Cancel" ng-click="isEditable[$index] = false" />
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3">
+                <input type="button" class="btn btn-info" class="pull-right" value="Edit" ng-click="isEditable[$index] = true" />
+                <input type="button" class="btn btn-danger" class="pull-right" value="Delete" ng-click="delete($index)" />
+            </div>
+        </div>
+    </div>
+</div>
