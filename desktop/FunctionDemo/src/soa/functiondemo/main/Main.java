@@ -18,7 +18,7 @@ public class Main {
 		// Edit a book by _id
 		JSONObject editedBook = new JSONObject();
 		String id = "55f52daac38bedc5121ac05f";
-		editedBook.put("title", "Ba tên cướp");
+		editedBook.put("title", "Cho tôi xin một vé đi tuổi thơ");
 		Function.editBook(id, editedBook);
 		
 		// Delete a book by _id
