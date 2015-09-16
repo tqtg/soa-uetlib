@@ -32,6 +32,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// decode utf-8
+app.use(function(req, res, next) {
+	for (x in req.body) {
+		req.body[x] = decodeURIComponent(req.body[x]);
+		console.log(req.body);
+	}
+	next();
+});
+
 app.use('/', routes);
 app.use('/books/api', books);
 
