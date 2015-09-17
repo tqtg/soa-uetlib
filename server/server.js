@@ -1,30 +1,28 @@
 // server
 var express = require('express');
+var app = express();
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
+var passport = require('passport');
+var flash = require('connect-flash');
+var session      = require('express-session');
 
-// config
+var mongoose = require('mongoose');
 var db = require('./config/db');
 
-// route
-var routes = require('./routes/routes');
-var books = require('./routes/books');
-
-var app = express();
-
-// connect to mongoDB
+// configuration ===============================================================
 mongoose.connect(db.url);
+require('./config/passport')(passport); // pass passport for configuration
 
-// view engine setup
+// set up our express application
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 
-// uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -32,7 +30,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// decode utf-8
+// required for passport
+app.use(session({ secret: 'soa-assignment1-library-management-system' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+// decode utf-8 for request from java app
 app.use(function(req, res, next) {
 	for (x in req.body) {
 		req.body[x] = decodeURIComponent(req.body[x]);
@@ -41,8 +45,9 @@ app.use(function(req, res, next) {
 	next();
 });
 
-app.use('/', routes);
-app.use('/books/api', books);
+// routes ======================================================================
+require('./routes/routes.js')(app, passport);
+require('./routes/books.js')(app, mongoose, passport);
 
 //	startup our app at http://localhost:3000
 app.set('port', process.env.PORT || 3000);
