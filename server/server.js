@@ -46,8 +46,8 @@ app.use(function(req, res, next) {
 });
 
 // routes ======================================================================
-require('./routes/routes.js')(app, passport);
 require('./routes/books.js')(app, mongoose, passport);
+require('./routes/routes.js')(app, passport);
 
 //	startup our app at http://localhost:3000
 app.set('port', process.env.PORT || 3000);

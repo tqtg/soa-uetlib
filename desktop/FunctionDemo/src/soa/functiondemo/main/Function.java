@@ -7,9 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 public class Function {
 	private static final String USER_AGENT = "Mozilla/5.0";
@@ -17,8 +15,34 @@ public class Function {
 	private static final String IP = "http://localhost";
 	private static final String PORT = "3000";
 	
+	public static String login(String username, String password) throws Exception {
+		String url = IP + ":" + PORT + "/login";
+		String urlParameters = "username=" + username + "&password=" + password;
+		URL obj = new URL(url);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+		// add request header
+		con.setRequestMethod("POST");
+		con.setRequestProperty("User-Agent", USER_AGENT);
+		con.setInstanceFollowRedirects( false );
+		
+		// Send post request
+		con.setDoOutput(true);
+		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+		wr.writeBytes(urlParameters);
+		wr.flush();
+		wr.close();
+
+		int responseCode = con.getResponseCode();
+		System.out.println("\nSending 'POST' request to URL : " + url);
+		System.out.println("Post parameters : " + urlParameters);
+		System.out.println("Response Code : " + responseCode);
+		
+		return con.getHeaderField("Set-Cookie");
+	}
+	
 	// GET
-	public static String getAllBooks() throws Exception {
+	public static String getAllBooks(String cookie) throws Exception {
 		String url = IP + ":" + PORT + "/books/api";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -26,6 +50,7 @@ public class Function {
 		// add request header
 		con.setRequestMethod("GET");
 		con.setRequestProperty("User-Agent", USER_AGENT);
+		con.setRequestProperty("Cookie", cookie);
 		
 		int responseCode = con.getResponseCode();
 		System.out.println("\nSending GET request to URL: " + url);
@@ -37,7 +62,7 @@ public class Function {
 		StringBuffer response = new StringBuffer();
 		
 		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
+			response.append(inputLine + "\n");
 		}
 		in.close();
 		
@@ -49,7 +74,7 @@ public class Function {
 	
 	// POST
 	@SuppressWarnings("unchecked")
-	public static void createBook(JSONObject book) throws Exception {
+	public static void createBook(String cookie, JSONObject book) throws Exception {
 		String url = IP + ":" + PORT + "/books/api";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -57,6 +82,7 @@ public class Function {
 		// add request header
 		con.setRequestMethod("POST");
 		con.setRequestProperty("User-Agent", USER_AGENT);
+		con.setRequestProperty("Cookie", cookie);
 		con.setRequestProperty("Accept-Charset", "UTF-8"); 
 		con.setRequestProperty("Content-Type", "application/json");
 		
@@ -84,7 +110,7 @@ public class Function {
 		StringBuffer response = new StringBuffer();
 
 		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
+			response.append(inputLine + "\n");
 		}
 		in.close();
 		
@@ -94,7 +120,7 @@ public class Function {
 	
 	// PUT
 	@SuppressWarnings("unchecked")
-	public static void editBook(String id, JSONObject editedBook) throws Exception {
+	public static void editBook(String cookie, String id, JSONObject editedBook) throws Exception {
 		String url = IP + ":" + PORT + "/books/api/" + id;
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -102,6 +128,7 @@ public class Function {
 		//add request header
 		con.setRequestMethod("PUT");
 		con.setRequestProperty("User-Agent", USER_AGENT);
+		con.setRequestProperty("Cookie", cookie);
 		con.setRequestProperty("Accept-Charset", "UTF-8");
 		con.setRequestProperty("Content-Type", "application/json"); 
 
@@ -129,7 +156,7 @@ public class Function {
 		StringBuffer response = new StringBuffer();
 
 		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
+			response.append(inputLine + "\n");
 		}
 		in.close();
 		
@@ -138,7 +165,7 @@ public class Function {
 	}
 	
 	// PUT
-	public static void delete(String id) throws Exception {
+	public static void delete(String cookie, String id) throws Exception {
 		String url = IP + ":" + PORT + "/books/api/" + id;
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -146,6 +173,7 @@ public class Function {
 		// add request header
 		con.setRequestMethod("DELETE");
 		con.setRequestProperty("User-Agent", USER_AGENT);
+		con.setRequestProperty("Cookie", cookie);
 		
 		// Send delete request
 		int responseCode = con.getResponseCode();
@@ -158,7 +186,7 @@ public class Function {
 		StringBuffer response = new StringBuffer();
 
 		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
+			response.append(inputLine + "\n");
 		}
 		in.close();
 		

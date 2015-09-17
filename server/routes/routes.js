@@ -5,7 +5,7 @@ module.exports = function(app, passport) {
 	});
 
 	app.post('/login', passport.authenticate('local-login', {
-		successRedirect : '/home',
+		successRedirect : '/',
 		failureRedirect : '/login',
 		failureFlash : true
 	}));
@@ -16,7 +16,7 @@ module.exports = function(app, passport) {
 	});
 
 	app.post('/signup', passport.authenticate('local-signup', {
-		successRedirect : '/home',
+		successRedirect : '/',
 		failureRedirect : '/signup',
 		failureFlash : true
 	}));
@@ -28,23 +28,21 @@ module.exports = function(app, passport) {
 	});
 
 	// use passport to control
-	app.get('/', function(req, res, next) {
-		res.redirect('/login');
-	});
-
-	app.get('/home', function(req, res, next) {
+	app.get('/', isLoggedIn, function(req, res, next) {
 		res.render('index.html');
 	});
 
+	app.get('/*', function(req, res, next) {
+		res.redirect('/');
+	});
 }
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
-
     // if user is authenticated in the session, carry on 
     if (req.isAuthenticated())
         return next();
 
     // if they aren't redirect them to the home page
-    res.redirect('/');
+    res.redirect('/login');
 }

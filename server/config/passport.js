@@ -60,6 +60,7 @@ module.exports = function(passport) {
 	                // set the user's local credentials
 	                newUser.local.username = username;
 	                newUser.local.password = newUser.generateHash(password);
+	                newUser.local.role     = 1;    // student account
 
 	                // save the user
 	                newUser.save(function(err) {
