@@ -4,6 +4,12 @@ module.exports = function(app, passport) {
 		res.render('login.html');
 	});
 
+	app.post('/login', passport.authenticate('local-login', {
+		successRedirect : '/home',
+		failureRedirect : '/login',
+		failureFlash : true
+	}));
+
 	// signup
 	app.get('/signup', function(req, res, next) {
 		res.render('signup.html');
@@ -15,6 +21,7 @@ module.exports = function(app, passport) {
 		failureFlash : true
 	}));
 
+	// logout
 	app.get('/logout', function(req, res, next) {
 		req.logout();
 		res.redirect('/login');
