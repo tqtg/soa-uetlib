@@ -18,7 +18,7 @@ public class Function {
 	private static final String PORT = "3000";
 	
 	// GET
-	public static void getAllBooks() throws Exception {
+	public static String getAllBooks() throws Exception {
 		String url = IP + ":" + PORT + "/books/api";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -43,6 +43,8 @@ public class Function {
 		
 		System.out.println(response.toString());
 //		parseJSON(response.toString());
+		
+		return response.toString();
 	}
 	
 	// POST
@@ -162,23 +164,5 @@ public class Function {
 		
 		//print result
 		System.out.println(response.toString());
-	}
-	
-	// Parse string to json object
-	@SuppressWarnings("unused")
-	private static void parseJSON(String s) throws Exception {
-		System.out.println("================");
-		
-		JSONParser parser = new JSONParser();
-		Object obj = parser.parse(s);
-		
-		JSONArray array = (JSONArray) obj;
-		for (int i = 0; i < array.size(); i++) {
-			JSONObject object = (JSONObject) array.get(i);
-			System.out.println(object.get("title"));
-		}
-		
-		System.out.println("================");
-		System.out.println("Total books: " + array.size());
 	}
 }
