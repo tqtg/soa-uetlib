@@ -10,6 +10,10 @@ module.exports = function(app, passport) {
 		failureFlash : true
 	}));
 
+	app.post('/admin', passport.authenticate('admin-login'), function(req, res) {
+		res.send(200, 'Authorized');
+	});
+
 	// signup
 	app.get('/signup', function(req, res, next) {
 		res.render('signup.html');

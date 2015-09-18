@@ -16,7 +16,7 @@ public class Function {
 	private static final String PORT = "3000";
 	
 	public static String login(String username, String password) throws Exception {
-		String url = IP + ":" + PORT + "/login";
+		String url = IP + ":" + PORT + "/admin";
 		String urlParameters = "username=" + username + "&password=" + password;
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -37,6 +37,18 @@ public class Function {
 		System.out.println("\nSending 'POST' request to URL : " + url);
 		System.out.println("Post parameters : " + urlParameters);
 		System.out.println("Response Code : " + responseCode);
+		
+//		BufferedReader in = new BufferedReader(
+//				new InputStreamReader(con.getInputStream()));
+//		String inputLine;
+//		StringBuffer response = new StringBuffer();
+//		
+//		while ((inputLine = in.readLine()) != null) {
+//			response.append(inputLine + "\n");
+//		}
+//		in.close();
+		
+//		System.out.println(response.toString());
 		
 		return con.getHeaderField("Set-Cookie");
 	}

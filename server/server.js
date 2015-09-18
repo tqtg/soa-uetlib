@@ -36,15 +36,6 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-// decode utf-8 for request from java app
-app.use(function(req, res, next) {
-	for (x in req.body) {
-		req.body[x] = decodeURIComponent(req.body[x]);
-		console.log(req.body);
-	}
-	next();
-});
-
 // routes ======================================================================
 require('./routes/books.js')(app, mongoose, passport);
 require('./routes/routes.js')(app, passport);

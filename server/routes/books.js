@@ -1,6 +1,15 @@
 var Book = require('../models/book');
 
 module.exports = function(app, mongoose, passport) {
+	// decode utf-8 for request from java app
+	app.use('/books/api', function(req, res, next) {
+		for (x in req.body) {
+			req.body[x] = decodeURIComponent(req.body[x]);
+			console.log(req.body);
+		}
+		next();
+	});
+
 	/* GET books listing. */
 	app.get('/books/api', isLoggedIn, function(req, res, next) {
 		Book.find(function(err, books) {
@@ -69,7 +78,7 @@ function isLoggedIn(req, res, next) {
 // route middleware to make sure a user is admin
 function isAdmin(req, res, next) {
 	// if user is authenticated in the session, carry on 
-    if (req.isAuthenticated())
+    if (req.isAuthenticated() && req.user.role === 2)
         return next();
 
     // if they aren't redirect them to the home page

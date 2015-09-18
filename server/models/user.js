@@ -39,15 +39,8 @@ UserSchema.methods.validPassword = function(password) {
 };
 
 // checking if account is admin
-// UserSchema.methods.isAdmin = function(id) {
-//     this.model('User').findOne({_id: id, role : 2}, function (err, user) {
-//         if (user) {
-//             console.log("Admin: " + user);
-//             return true;
-//         }
-
-//         return false;
-//     });
-// };
+UserSchema.methods.isAdmin = function() {
+    return this.local.role === 2;
+};
 
 module.exports = mongoose.model('User', UserSchema)
