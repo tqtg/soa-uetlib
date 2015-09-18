@@ -38,6 +38,8 @@ public class Function {
 		System.out.println("Post parameters : " + urlParameters);
 		System.out.println("Response Code : " + responseCode);
 		
+		System.out.println(con.getRequestProperty("req.flash"));
+		
 //		BufferedReader in = new BufferedReader(
 //				new InputStreamReader(con.getInputStream()));
 //		String inputLine;

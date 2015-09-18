@@ -1,7 +1,7 @@
 module.exports = function(app, passport) {
 	// login
 	app.get('/login', function(req, res, next) {
-		res.render('login.html');
+		res.render('login.html', {message: req.flash('loginMessage')});
 	});
 
 	app.post('/login', passport.authenticate('local-login', {
@@ -10,13 +10,15 @@ module.exports = function(app, passport) {
 		failureFlash : true
 	}));
 
-	app.post('/admin', passport.authenticate('admin-login'), function(req, res) {
+	app.post('/admin', passport.authenticate('admin-login', {
+		failureFlash : true
+	}), function(req, res) {
 		res.send(200, 'Authorized');
 	});
 
 	// signup
 	app.get('/signup', function(req, res, next) {
-		res.render('signup.html');
+		res.render('signup.html', {message: req.flash('signupMessage')});
 	});
 
 	app.post('/signup', passport.authenticate('local-signup', {

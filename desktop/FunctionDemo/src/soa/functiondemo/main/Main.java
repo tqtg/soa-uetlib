@@ -8,7 +8,7 @@ public class Main {
 	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception {
-		String cookie = Function.login("admin", "admin");
+		String cookie = Function.login("admin", "1");
 //		System.out.println(cookie);
 		
 		// Get all books
