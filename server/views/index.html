@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 <html ng-app="soaApp">
 	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    	<meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, , initial-scale=1.0">
+	    <link href="/include/favicon.png" rel="icon">
 		<title>Library Management System</title>
+
 		<link rel="stylesheet" type="text/css" href="/lib/bootstrap/dist/css/bootstrap.min.css">
+		<link href='https://fonts.googleapis.com/css?family=Cabin:400,500,600' rel='stylesheet' type='text/css'>
 		<script type="text/javascript" src="/lib/angular/angular.min.js"></script>
 		<script type="text/javascript" src="/lib/angular-route/angular-route.min.js"></script>
+		<!-- --------------------------------------------------------------- -->
+	    <link href="/include/css/stylesheet.css" rel="stylesheet" type="text/css">
+	    <link rel="stylesheet" type="text/css" href="/lib/font-awesome-4.4.0/css/font-awesome.min.css">
+	    <link href="/include/css/superfish.css" rel="stylesheet" type="text/css">
+	    <link href="/include/css/responsive.css" rel="stylesheet" type="text/css">
 
+	    <script type="text/javascript" src="/include/js/jquery-1.11.2.min.js"></script>
+	    <script type="text/javascript" src="/include/js/jquery-migrate-1.2.1.js"></script>
+	    <script type="text/javascript" src="/include/js/bootstrap.min.js"></script>
+	    <script type="text/javascript" src="/include/js/script.js"></script>
+	    <script type="text/javascript" src="/include/js/jquery.matchHeight-min.js"></script>
+		<!-- ---------------------------------------------------------------- -->
 		<script type="text/javascript" src="/javascripts/app.js"></script>
 		<script type="text/javascript" src="/javascripts/factory.js"></script>
 		<script type="text/javascript" src="/javascripts/controllers/homeCtrl.js"></script>
@@ -13,10 +30,6 @@
 		<script type="text/javascript" src="/javascripts/controllers/userCtrl.js"></script>
 	</head>
 	<body>
-		<div class="container">
-			<h1>Library Management System</h1>
-			<hr/>
-			<ng-view></ng-view>
-		</div>
+		<ng-view></ng-view>
 	</body>
 </html>
