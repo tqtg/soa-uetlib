@@ -23,36 +23,36 @@ public class Main {
 		System.out.println("Fetching " + url);
 		
 		JSONArray books = new JSONArray();
-		JSONArray bookCollections = new JSONArray();
+		JSONArray bookCategories = new JSONArray();
 		
 		Elements bookCategory = doc.select("#collapse-category > div > div > a");
 		for (Element category : bookCategory) {
 			String href = category.attr("href");
-			String collectionId = href.substring(href.lastIndexOf("/") + 1);
-			String collectionName = category.text();
+			String categoryId = href.substring(href.lastIndexOf("/") + 1);
+			String categoryName = category.text();
 			
 			JSONObject col = new JSONObject();
-			col.put("id", collectionId);
-			col.put("name", collectionName);
-			bookCollections.add(col);
+			col.put("id", categoryId);
+			col.put("name", categoryName);
+			bookCategories.add(col);
 			
 			int nPage = 5;
 			for (int i = 1; i <= nPage; i++) {
 				url = BASE_URL + href + "?page=" + i;
 				System.out.println(url);
-				books.addAll(crawl(url, collectionId));
+				books.addAll(crawl(url, categoryId));
 			}
 			
 		}
 		
 		write(books.toJSONString(), "../output/books.json");
-		write(bookCollections.toJSONString(), "../output/collections.json");
+		write(bookCategories.toJSONString(), "../output/categories.json");
 
 		System.out.println("Done!");
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static JSONArray crawl(String url, String collectionId) throws Exception {
+	private static JSONArray crawl(String url, String categoryId) throws Exception {
 		JSONArray books = new JSONArray();
 		
 		Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
@@ -63,7 +63,7 @@ public class Main {
 			JSONObject book = new JSONObject();
 			book.put("title", product.select("a").attr("title"));
 			book.put("author", product.select("p.author").text());
-			book.put("collection", collectionId);
+			book.put("category", categoryId);
 			book.put("image", product.select("a > span.image > img").attr("src"));
 			
 			String bookURL = BASE_URL + product.select("a").attr("href");

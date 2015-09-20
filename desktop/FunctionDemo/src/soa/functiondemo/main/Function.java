@@ -15,7 +15,9 @@ public class Function {
 	private static final String IP = "http://localhost";
 	private static final String PORT = "3000";
 	
-	public static String login(String username, String password) throws Exception {
+	public static String cookie;
+	
+	public static boolean login(String username, String password) throws Exception {
 		String url = IP + ":" + PORT + "/admin";
 		String urlParameters = "username=" + username + "&password=" + password;
 		URL obj = new URL(url);
@@ -38,25 +40,12 @@ public class Function {
 		System.out.println("Post parameters : " + urlParameters);
 		System.out.println("Response Code : " + responseCode);
 		
-		System.out.println(con.getRequestProperty("req.flash"));
-		
-//		BufferedReader in = new BufferedReader(
-//				new InputStreamReader(con.getInputStream()));
-//		String inputLine;
-//		StringBuffer response = new StringBuffer();
-//		
-//		while ((inputLine = in.readLine()) != null) {
-//			response.append(inputLine + "\n");
-//		}
-//		in.close();
-		
-//		System.out.println(response.toString());
-		
-		return con.getHeaderField("Set-Cookie");
+		cookie = con.getHeaderField("Set-Cookie");
+		return (responseCode == 200);
 	}
 	
 	// GET
-	public static String getAllBooks(String cookie) throws Exception {
+	public static String getAllBooks() throws Exception {
 		String url = IP + ":" + PORT + "/books/api";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -88,7 +77,7 @@ public class Function {
 	
 	// POST
 	@SuppressWarnings("unchecked")
-	public static void createBook(String cookie, JSONObject book) throws Exception {
+	public static void createBook(JSONObject book) throws Exception {
 		String url = IP + ":" + PORT + "/books/api";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -134,7 +123,7 @@ public class Function {
 	
 	// PUT
 	@SuppressWarnings("unchecked")
-	public static void editBook(String cookie, String id, JSONObject editedBook) throws Exception {
+	public static void editBook(String id, JSONObject editedBook) throws Exception {
 		String url = IP + ":" + PORT + "/books/api/" + id;
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -179,7 +168,7 @@ public class Function {
 	}
 	
 	// PUT
-	public static void delete(String cookie, String id) throws Exception {
+	public static void delete(String id) throws Exception {
 		String url = IP + ":" + PORT + "/books/api/" + id;
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();

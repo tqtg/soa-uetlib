@@ -26,6 +26,19 @@ module.exports = function(app, mongoose, passport) {
 		})
 	});
 
+	/* GET /books/:collection/:page */
+	app.get('/books/api/:category/:page', isLoggedIn, function(req, res, next) {
+		Book.find({
+			'category' : req.params.category
+		}, {}, {
+			skip : (req.params.page - 1) * 20,
+			limit : 20,
+		}, function(err, post) {
+			if (err) return next(err);
+			res.json(post);
+		})
+	});
+
 	/* POST /books */
 	app.post('/books/api', isAdmin, function(req, res, next) {
 		Book.create(req.body, function(err, post) {
