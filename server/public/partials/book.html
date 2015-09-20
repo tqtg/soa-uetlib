@@ -1,21 +1,168 @@
-<div class="container" ng-controller="BookCtrl">
-    <div class="row col-md-12">
-        <div>
-            <input type="text" class="form-control input-lg" placeholder="Enter a book title" ng-keypress="save($event)" ng-model="bookInput">
-        </div>
-    </div>
-    <div class="row col-md-12 books">
-        <h3>Book list:</h3>
-        <div ng-repeat="book in books" class="book col-md-12 col-sm-12 col-xs-12" >
-            <div class="col-md-8 col-sm-8 col-xs-8">
-                <span ng-show="!isEditable[$index]">{{book.title}}</span>
-                <input ng-show="isEditable[$index]" type="text" value="{{book.title}}" ng-keypress="edit($event, $index);">
-                <input ng-show="isEditable[$index]" type="button" class="btn btn-warning" value="Cancel" ng-click="isEditable[$index] = false" />
-            </div>
-            <div class="col-md-3 col-sm-3 col-xs-3">
-                <input type="button" class="btn btn-info" class="pull-right" value="Edit" ng-click="isEditable[$index] = true" />
-                <input type="button" class="btn btn-danger" class="pull-right" value="Delete" ng-click="delete($index)" />
-            </div>
+<div class="swipe-left" ng-controller="BookCtrl"></div>
+<div id="body">
+    <div class="swipe"></div>
+    <div id="page">
+        <div id="shadow">
+            <div class="shadow" style="height: 2193px;"></div>
+            <header id="header">
+                <div class="top-line">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="toprow">
+                                    <ul class="links">
+                                        <li class="first"><a class="active" href="#"><i class="fa fa-home"></i>Home</a></li>
+                                        <li><a class="" href="#"><i class="fa fa-user"></i>Register</a></li>
+                                        <li><a href="#"><i class="fa fa-user"></i>Login</a></li>
+                                        <li class="login_h last"><a href="#"><i class="fa fa-lock"></i>About us</a></li>
+                                    </ul>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="cart-position">
+                                    <div class="cart-inner">
+                                        <div id="cart" class="">
+                                            <div class="heading">
+                                                <span class="link_a">
+                                                    <i class="fa fa-shopping-cart"></i>
+                                                    <b>Cart:</b>
+                                                    <span class="sc-button"></span>
+                                                    <span id="cart-total2">0</span>
+                                                    <span id="cart-total">0 item(s) $0.00</span>
+                                                    <i class="fa fa-angle-down"></i>
+                                                    <span class="clear"></span>
+                                                </span>
+                                            </div>
+                                            <div class="content">
+                                                <div class="content-scroll">
+                                                    <div class="empty">Your shopping cart is empty!</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="top_color">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="logo">
+                                    <a href="home">
+                                        <img src="include/logo.png" title="RealBooks" alt="RealBooks">
+                                    </a>
+                                </div>
+                                <div id="search">
+                                    <div class="inner">
+                                        <div class="button-search">
+                                            <i class="fa fa-search"></i>
+                                            <span>Search</span>
+                                        </div>
+                                        <input type="text" name="search">
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <section>
+                <div class="container">
+                    <p id="back-top"> <a href="#top"><span></span></a> </p> <!-- FOR BACK TO TOP ARROW -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="list-group">
+                                <a  class="list-group-item list-group-item-success">
+                                    <h4 class="list-group-item-heading">Category</h4>
+                                </a>
+                                <a href="#" class="list-group-item">Agriculture</a>
+                                <a href="#" class="list-group-item">Architecture</a>
+                                <a href="#" class="list-group-item">Art</a>
+                                <a href="#" class="list-group-item">Biography & Memoir</a>
+                                <a href="#" class="list-group-item">Business</a>
+                                <a href="#" class="list-group-item">Children's Fiction</a>
+                                <a href="#" class="list-group-item">Children's Non-Fiction</a>
+                                <a href="#" class="list-group-item">Cooking, Food & Wine</a>
+                                <a href="#" class="list-group-item">Crafts & Hobbies</a>
+                                <a href="#" class="list-group-item">Family & Parenting</a>
+                                <a href="#" class="list-group-item">Fiction</a>
+                                <a href="#" class="list-group-item">Fun & Games</a>
+                                <a href="#" class="list-group-item">Gardening</a>
+                                <a href="#" class="list-group-item">Health, Mind, & Body</a>
+                                <a href="#" class="list-group-item">History</a>
+                                <a href="#" class="list-group-item">Home Reference/How-to</a>
+                                <a href="#" class="list-group-item">Humor</a>
+                                <a href="#" class="list-group-item">Medical</a>
+                                <a href="#" class="list-group-item">Music</a>
+                                <a href="#" class="list-group-item">Performing Arts</a>
+                                <a href="#" class="list-group-item">Pets</a>
+                                <a href="#" class="list-group-item">Philosophy</a>
+                                <a href="#" class="list-group-item">Photography</a>
+                                <a href="#" class="list-group-item">Reference</a>
+                                <a href="#" class="list-group-item">Religion</a>
+                                <a href="#" class="list-group-item">Self-Help</a>
+                                <a href="#" class="list-group-item">Social Science</a>
+                                <a href="#" class="list-group-item">Sports & Recreation</a>
+                                <a href="#" class="list-group-item">Transportation</a>
+                                <a href="#" class="list-group-item">Travel</a>
+                            </div>
+                        </div> <!-- END OF CATEGORY DIV -->
+                        <div class="col-md-9"  id="content">
+                            <div class="box feature">
+                            <div class="box-heading"> 
+                                Book List
+                            </div>
+                            <div class="box-content">
+                                <div class="box-product">
+                                    <ul class="row">
+                                        <li class="col-md-3" ng-repeat="book in books" >
+                                            <div>
+                                                <div class="image2">
+                                                    <a title="Leras nuyas" href="http://livedemo00.template-help.com/opencart_47983/index.php?route=product/product&product_id=33"><img id="img_33" src="http://livedemo00.template-help.com/opencart_47983/image/cache/data/The%20Naked%20Pint%20by%20Christina%20Perozzi%20&%20Hallie%20Beaune%201%20copy-131x199.png"></a>
+                                                     <a href="http://livedemo00.template-help.com/opencart_47983/index.php?route=product/product&product_id=33" rel="colorbox" class="colorbox3 quick-view-button cboxElement"><i class=" fa fa-search-plus "></i></a> <!--FOR MAGNIFYING GLASS-->
+                                                </div>
+                                                <div class="inner"> <!-- FOR NAME AND DESCRIPTION -->
+                                                    <div class="f-left maxheight-feat" style="height: 86px;">
+                                                        <div class="name">
+                                                            <a href="http://livedemo00.template-help.com/opencart_47983/index.php?route=product/product&product_id=33">{{book.title}}</a>
+                                                        </div>
+                                                        <div class="description">Well, reading books as a hobby...</div>
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class"clear"></div>
+            </section>
+            <footer id="footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="powered">
+                                <span>Design by UET students </span>
+                            <div class="social">
+                                <ul>
+                                    <li><a href="http://facebook.com" class="tooltip-2" title="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a></li>
+                                    <li><a href="http://accounts.google.com" class="tooltip-2" title="" data-original-title="Google+"><i class="fa fa-google-plus"></i></a></li>
+                                    <li><a href="#" class="tooltip-2" title="" data-original-title="RSS"><i class="fa fa-rss"></i></a></li>
+                                    <li><a href="http://Pinterest.com" class="tooltip-2" title="" data-original-title="Pinterest"><i class="fa fa-pinterest"></i></a></li>
+                                    <li><a href="http://linkedin.com" class="tooltip-2" title="" data-original-title="LinkedIn"><i class="fa fa-linkedin"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
 </div>
