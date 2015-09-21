@@ -1,4 +1,4 @@
-var app = angular.module('soaApp', ['ngRoute']);
+var app = angular.module('soaApp', ['ngRoute', 'ui.bootstrap', 'ngDialog', 'angucomplete-alt']);
 
 app.config(function($routeProvider) {
     $routeProvider

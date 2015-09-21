@@ -93,13 +93,13 @@
                                         <li class="col-md-3" ng-repeat="book in books" >
                                             <div>
                                                 <div class="image2">
-                                                    <a title="Leras nuyas" href="http://livedemo00.template-help.com/opencart_47983/index.php?route=product/product&product_id=33"><img id="img_33" src="{{book.image}}"></a>
-                                                     <a href="http://livedemo00.template-help.com/opencart_47983/index.php?route=product/product&product_id=33" rel="colorbox" class="colorbox3 quick-view-button cboxElement"><i class=" fa fa-search-plus "></i></a> <!--FOR MAGNIFYING GLASS-->
+                                                    <a title="Leras nuyas" ng-click="clickToOpen()"><img id="img_33" src="{{book.image}}"></a>
+                                                     <a ng-click="clickToOpen(book)" rel="colorbox" class="colorbox3 quick-view-button cboxElement"><i class=" fa fa-search-plus "></i></a> <!--FOR MAGNIFYING GLASS-->
                                                 </div>
                                                 <div class="inner"> <!-- FOR NAME AND DESCRIPTION -->
                                                     <div class="f-left maxheight-feat" style="height: 86px;">
                                                         <div class="name">
-                                                            <a href="http://livedemo00.template-help.com/opencart_47983/index.php?route=product/product&product_id=33">{{book.title | limitTo: 30}}<text ng-show="book.title.length > 30">...</text></a>
+                                                            <a ng-click="clickToOpen(book)">{{book.title | limitTo: 30}}<text ng-show="book.title.length > 30">...</text></a>
                                                         </div>
                                                         <div class="author">{{book.author}}</div>
                                                     </div>
