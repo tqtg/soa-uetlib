@@ -37,6 +37,7 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 // routes ======================================================================
+require('./routes/categories.js')(app, mongoose, passport);
 require('./routes/books.js')(app, mongoose, passport);
 require('./routes/routes.js')(app, passport);
 

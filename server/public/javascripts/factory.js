@@ -1,22 +1,38 @@
 app.factory('soaFactory', function($http) {
-	var urlBase = "/books/api";
-	var bookService = {};
+	var urlBase = "/books";
+	var services = {};
 
-	bookService.getBooks = function() {
+	services.getBooks = function() {
 		return $http.get(urlBase);
 	}
 
-	bookService.saveBook = function(book) {
-		return $http.post(urlBase, book);
+	services.getAllBooks = function() {
+		return $http.get(urlBase + '/all');
 	}
 
-	bookService.updateBook = function(id, book) {
-		return $http.put(urlBase + '/' + id, book);
+	services.getByCategory = function(category, page) {
+		return $http.get(urlBase + '/category/' + category + '/' + page);
 	}
 
-	bookService.deleteBook = function(id) {
-		return $http.delete(urlBase + '/' + id)
+	services.getBook = function(id) {
+		return $http.get(urlBase + '/id/' + id);
 	}
 
-	return bookService;
+	services.getCategories = function() {
+		return $http.get('/categories');
+	}
+
+	// bookService.saveBook = function(book) {
+	// 	return $http.post(urlBase, book);
+	// }
+
+	// bookService.updateBook = function(id, book) {
+	// 	return $http.put(urlBase + '/' + id, book);
+	// }
+
+	// bookService.deleteBook = function(id) {
+	// 	return $http.delete(urlBase + '/' + id)
+	// }
+
+	return services;
 });

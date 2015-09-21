@@ -74,39 +74,12 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="list-group">
-                                <a  class="list-group-item list-group-item-success">
+                                <a class="list-group-item list-group-item-success">
                                     <h4 class="list-group-item-heading">Category</h4>
                                 </a>
-                                <a href="#" class="list-group-item">Agriculture</a>
-                                <a href="#" class="list-group-item">Architecture</a>
-                                <a href="#" class="list-group-item">Art</a>
-                                <a href="#" class="list-group-item">Biography & Memoir</a>
-                                <a href="#" class="list-group-item">Business</a>
-                                <a href="#" class="list-group-item">Children's Fiction</a>
-                                <a href="#" class="list-group-item">Children's Non-Fiction</a>
-                                <a href="#" class="list-group-item">Cooking, Food & Wine</a>
-                                <a href="#" class="list-group-item">Crafts & Hobbies</a>
-                                <a href="#" class="list-group-item">Family & Parenting</a>
-                                <a href="#" class="list-group-item">Fiction</a>
-                                <a href="#" class="list-group-item">Fun & Games</a>
-                                <a href="#" class="list-group-item">Gardening</a>
-                                <a href="#" class="list-group-item">Health, Mind, & Body</a>
-                                <a href="#" class="list-group-item">History</a>
-                                <a href="#" class="list-group-item">Home Reference/How-to</a>
-                                <a href="#" class="list-group-item">Humor</a>
-                                <a href="#" class="list-group-item">Medical</a>
-                                <a href="#" class="list-group-item">Music</a>
-                                <a href="#" class="list-group-item">Performing Arts</a>
-                                <a href="#" class="list-group-item">Pets</a>
-                                <a href="#" class="list-group-item">Philosophy</a>
-                                <a href="#" class="list-group-item">Photography</a>
-                                <a href="#" class="list-group-item">Reference</a>
-                                <a href="#" class="list-group-item">Religion</a>
-                                <a href="#" class="list-group-item">Self-Help</a>
-                                <a href="#" class="list-group-item">Social Science</a>
-                                <a href="#" class="list-group-item">Sports & Recreation</a>
-                                <a href="#" class="list-group-item">Transportation</a>
-                                <a href="#" class="list-group-item">Travel</a>
+                                <li class="list-group-item" ng-repeat="category in categories">
+                                    <a href="#">{{category.name}}</a>
+                                </li>
                             </div>
                         </div> <!-- END OF CATEGORY DIV -->
                         <div class="col-md-9"  id="content">
@@ -120,15 +93,15 @@
                                         <li class="col-md-3" ng-repeat="book in books" >
                                             <div>
                                                 <div class="image2">
-                                                    <a title="Leras nuyas" href="http://livedemo00.template-help.com/opencart_47983/index.php?route=product/product&product_id=33"><img id="img_33" src="http://livedemo00.template-help.com/opencart_47983/image/cache/data/The%20Naked%20Pint%20by%20Christina%20Perozzi%20&%20Hallie%20Beaune%201%20copy-131x199.png"></a>
+                                                    <a title="Leras nuyas" href="http://livedemo00.template-help.com/opencart_47983/index.php?route=product/product&product_id=33"><img id="img_33" src="{{book.image}}"></a>
                                                      <a href="http://livedemo00.template-help.com/opencart_47983/index.php?route=product/product&product_id=33" rel="colorbox" class="colorbox3 quick-view-button cboxElement"><i class=" fa fa-search-plus "></i></a> <!--FOR MAGNIFYING GLASS-->
                                                 </div>
                                                 <div class="inner"> <!-- FOR NAME AND DESCRIPTION -->
                                                     <div class="f-left maxheight-feat" style="height: 86px;">
                                                         <div class="name">
-                                                            <a href="http://livedemo00.template-help.com/opencart_47983/index.php?route=product/product&product_id=33">{{book.title}}</a>
+                                                            <a href="http://livedemo00.template-help.com/opencart_47983/index.php?route=product/product&product_id=33">{{book.title | limitTo: 30}}<text ng-show="book.title.length > 30">...</text></a>
                                                         </div>
-                                                        <div class="description">Well, reading books as a hobby...</div>
+                                                        <div class="author">{{book.author}}</div>
                                                     </div>
                                                     <div class="clear"></div>
                                                 </div>

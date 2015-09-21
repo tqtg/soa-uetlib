@@ -2,7 +2,7 @@ var Book = require('../models/book');
 
 module.exports = function(app, mongoose, passport) {
 	// decode utf-8 for request from java app
-	app.use('/books/api', function(req, res, next) {
+	app.use('/books', function(req, res, next) {
 		for (x in req.body) {
 			req.body[x] = decodeURIComponent(req.body[x]);
 			console.log(req.body);
@@ -10,29 +10,50 @@ module.exports = function(app, mongoose, passport) {
 		next();
 	});
 
-	/* GET books listing. */
-	app.get('/books/api', isLoggedIn, function(req, res, next) {
+	/* GET all books */
+	app.get('/books/all', isLoggedIn, function(req, res, next) {
 		Book.find(function(err, books) {
 			if (err) return next(err);
 			res.json(books);
 		})
 	});
 
-	/* GET /books/:id */
-	app.get('/books/api/:id', isLoggedIn, function(req, res, next) {
+	/* GET books listing. Limit 50 */
+	app.get('/books', isLoggedIn, function(req, res, next) {
+		Book.find({}, {}, {
+			limit : 50
+		}, function(err, books) {
+			if (err) return next(err);
+			res.json(books);
+		})
+	});
+
+	/* GET /books/id/:id */
+	app.get('/books/id/:id', isLoggedIn, function(req, res, next) {
 		Book.findById(req.params.id, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
 		})
 	});
 
-	/* GET /books/:collection/:page */
-	app.get('/books/api/:category/:page', isLoggedIn, function(req, res, next) {
+	/* GET /books/id/:id */
+	app.get('/books/page/:page', isLoggedIn, function(req, res, next) {
+		Book.find({}, {}, {
+			skip : (req.params.page - 1) * 20,
+			limit : 20
+		}, function(err, books) {
+			if (err) return next(err);
+			res.json(books);
+		})
+	});
+
+	/* GET /books/:category/:page */
+	app.get('/books/category/:category/:page', isLoggedIn, function(req, res, next) {
 		Book.find({
 			'category' : req.params.category
 		}, {}, {
 			skip : (req.params.page - 1) * 20,
-			limit : 20,
+			limit : 20
 		}, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
@@ -40,7 +61,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* POST /books */
-	app.post('/books/api', isAdmin, function(req, res, next) {
+	app.post('/books', isAdmin, function(req, res, next) {
 		Book.create(req.body, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
@@ -48,7 +69,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* PUT /books */
-	app.put('/books/api', isAdmin, function(req, res, next) {
+	app.put('/books', isAdmin, function(req, res, next) {
 		Book.update({
 			_id: mongoose.Types.ObjectId(req.body._id)
 		}, {
@@ -61,7 +82,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* PUT /books/:id */
-	app.put('/books/api/:id', isAdmin, function(req, res, next) {
+	app.put('/books/:id', isAdmin, function(req, res, next) {
 		Book.findByIdAndUpdate(req.params.id, req.body, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
@@ -70,7 +91,7 @@ module.exports = function(app, mongoose, passport) {
 
 
 	/* DELETE /books/:id */
-	app.delete('/books/api/:id', isAdmin, function(req, res, next) {
+	app.delete('/books/:id', isAdmin, function(req, res, next) {
 		Book.findByIdAndRemove(req.params.id, req.body, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
