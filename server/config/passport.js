@@ -23,12 +23,12 @@ module.exports = function(passport) {
     //         done(err, user);
     //     });
     // });
-    passport.serializeUser( (user, done) => {
+    passport.serializeUser( function(user, done) {
         var sessionUser = { id: user._id, role: user.local.role }
         done(null, sessionUser);
     })
 
-    passport.deserializeUser( (sessionUser, done) => {
+    passport.deserializeUser( function(sessionUser, done) {
       // The sessionUser object is different from the user mongoose collection
       // it's actually req.session.passport.user and comes from the session collection
         done(null, sessionUser);
