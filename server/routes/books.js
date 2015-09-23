@@ -1,4 +1,4 @@
-var Book = require('../models/book');
+var Book = require('../models/book.js');
 
 module.exports = function(app, mongoose, passport) {
 	// decode utf-8 for request from java app

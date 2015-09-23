@@ -1,4 +1,4 @@
-var Category = require('../models/category');
+var Category = require('../models/category.js');
 
 module.exports = function(app, mongoose, passport) {
 	/* GET all categories */
