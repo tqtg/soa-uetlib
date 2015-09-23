@@ -13,8 +13,13 @@ app.controller('BookCtrl', function($rootScope, $scope, soaFactory, ngDialog) {
 				    							<div class="col-md-7 col-md-offset-1">\
 				    								<h4>'+book.title+'</h4>\
 				    								<p>'+book.author+'</p>\
+				    								<p>Publisher: '+book.publisher+'</p>\
+				    								<p>Date: '+book.date+'</p>\
+				    								<p>Page: '+book.page+'</p>\
+				    								<p>Category: '+book.category+'</p>\
 				    							</div>\
-				    						</div>\
+				    						<div class="">\
+				    						<textarea class="col-md-offset-1 col-md-10" style="min-height:150px;">'+book.description+'</textarea>\
 				    					 </div>',
 				    plain: true,
 				    className: 'ngdialog-theme-default'
