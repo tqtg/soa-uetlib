@@ -6,11 +6,11 @@ package soa.assignment.uetlib.model;
 public class BookItem {
     private static final String TAG = "Book";
 
-    private int image;
+    private String image;
     private String title;
     private String author;
 
-    public BookItem (int image, String title, String author) {
+    public BookItem (String image, String title, String author) {
         super();
         this.setImage(image);
         this.setTitle(title);
@@ -25,11 +25,11 @@ public class BookItem {
         this.title = title;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

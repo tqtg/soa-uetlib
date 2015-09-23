@@ -1,17 +1,17 @@
 package soa.assignment.uetlib.activity;
 
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import soa.assignment.uetlib.R;
 import soa.assignment.uetlib.adapter.BookArrayAdapter;
@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private BookArrayAdapter bookArrayAdapter;
     private ListView listView;
     private static int colorIndex;
+
+    private static android.os.Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +47,25 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         bookArrayAdapter = new BookArrayAdapter(getApplicationContext(), R.layout.book_item_row);
         listView.setAdapter(bookArrayAdapter);
 
-        List<String[]> bookList = readData();
-        for(String[] bookData : bookList ) {
-//            String image = fruitData[0];
-            String title = bookData[1];
-            String author = bookData[2];
-            int image = 1;
+        String url = "http://128.199.89.183:3000/books/page/1";
 
-            BookItem book = new BookItem(image, title, author);
-            bookArrayAdapter.add(book);
+        try {
+            String books = new GetBookActivity().execute(url).get();
+            JSONArray bookArray = new JSONArray(books);
+
+            for (int i = 0; i < bookArray.length(); i++) {
+                JSONObject bookObj = bookArray.getJSONObject(i);
+                String image = bookObj.getString("image");
+                String title = bookObj.getString("title");
+                String author = bookObj.getString("author");
+
+                BookItem bookItem = new BookItem(image, title, author);
+                bookArrayAdapter.add(bookItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     @Override
@@ -98,77 +109,4 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
 
-    public List<String[]> readData(){
-        List<String[]> resultList = new ArrayList<>();
-
-        String[] fruit7 = new String[3];
-        fruit7[0] = "orange";
-        fruit7[1] = "Orange";
-        fruit7[2] = "47 Calories";
-        resultList.add(fruit7);
-
-        String[] fruit1 = new String[3];
-        fruit1[0] = "cherry";
-        fruit1[1] = "Cherry";
-        fruit1[2] = "50 Calories";
-        resultList.add(fruit1);
-
-
-        String[] fruit3 = new String[3];
-        fruit3[0] = "banana";
-        fruit3[1] = "Banana";
-        fruit3[2] = "89 Calories";
-        resultList.add(fruit3);
-
-        String[] fruit4 = new String[3];
-        fruit4[0] = "apple";
-        fruit4[1] = "Apple";
-        fruit4[2] = "52 Calories";
-        resultList.add(fruit4);
-
-        String[] fruit10 = new String[3];
-        fruit10[0] = "kiwi";
-        fruit10[1] = "Kiwi";
-        fruit10[2] = "61 Calories";
-        resultList.add(fruit10);
-
-        String[] fruit5 = new String[3];
-        fruit5[0] = "pear";
-        fruit5[1] = "Pear";
-        fruit5[2] = "57 Calories";
-        resultList.add(fruit5);
-
-
-        String[] fruit2 = new String[3];
-        fruit2[0] = "strawberry";
-        fruit2[1] = "Strawberry";
-        fruit2[2] = "33 Calories";
-        resultList.add(fruit2);
-
-        String[] fruit6 = new String[3];
-        fruit6[0] = "lemon";
-        fruit6[1] = "Lemon";
-        fruit6[2] = "29 Calories";
-        resultList.add(fruit6);
-
-        String[] fruit8 = new String[3];
-        fruit8[0] = "peach";
-        fruit8[1] = "Peach";
-        fruit8[2] = "39 Calories";
-        resultList.add(fruit8);
-
-        String[] fruit9 = new String[3];
-        fruit9[0] = "apricot";
-        fruit9[1] = "Apricot";
-        fruit9[2] = "48 Calories";
-        resultList.add(fruit9);
-
-        String[] fruit11 = new String[3];
-        fruit11[0] = "mango";
-        fruit11[1] = "Mango";
-        fruit11[2] = "60 Calories";
-        resultList.add(fruit11);
-
-        return  resultList;
-    }
 }
