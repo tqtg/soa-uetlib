@@ -11,7 +11,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* GET all books */
-	app.get('/books/all', isLoggedIn, function(req, res, next) {
+	app.get('/books/all', function(req, res, next) {
 		Book.find(function(err, books) {
 			if (err) return next(err);
 			res.json(books);
@@ -19,7 +19,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* GET books listing. Limit 50 */
-	app.get('/books', isLoggedIn, function(req, res, next) {
+	app.get('/books', function(req, res, next) {
 		Book.find({}, {}, {
 			limit : 50
 		}, function(err, books) {
@@ -29,7 +29,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* GET /books/id/:id */
-	app.get('/books/id/:id', isLoggedIn, function(req, res, next) {
+	app.get('/books/id/:id', function(req, res, next) {
 		Book.findById(req.params.id, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
@@ -37,7 +37,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* GET /books/id/:id */
-	app.get('/books/page/:page', isLoggedIn, function(req, res, next) {
+	app.get('/books/page/:page', function(req, res, next) {
 		Book.find({}, {}, {
 			skip : (req.params.page - 1) * 20,
 			limit : 20
@@ -48,7 +48,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* GET /books/:category/:page */
-	app.get('/books/category/:category/:page', isLoggedIn, function(req, res, next) {
+	app.get('/books/category/:category/:page', function(req, res, next) {
 		Book.find({
 			'category' : req.params.category
 		}, {}, {
