@@ -21,14 +21,15 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:src="@drawable/book_cover"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp">
 
                 <TextView
@@ -36,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Title"
-                    android:textSize="18dp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="10dp"/>
 
@@ -45,7 +46,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Author: "
-                    android:textSize="16dp"
                     android:layout_marginBottom="5dp"/>
 
                 <TextView
@@ -53,7 +53,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Publisher: Unknown"
-                    android:textSize="16dp"
                     android:layout_marginBottom="5dp"/>
 
                 <TextView
@@ -61,15 +60,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Published on: Unknown"
-                    android:textSize="16dp"
-                    android:layout_marginBottom="5dp"/>
+                    android:layout_marginBottom="2dp"/>
 
                 <TextView
                     android:id="@+id/bookPage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Page numbers: unknown"
-                    android:textSize="16dp"
                     android:layout_marginBottom="5dp"/>
 
             </LinearLayout>
@@ -86,9 +83,9 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:textSize="20dp"
-                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginBottom="2dp"
                 android:textStyle="bold"
                 android:text="Description" />
 
@@ -96,6 +93,7 @@
                 android:id="@+id/bookDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="14sp"
                 android:text="Unknown"/>
         </LinearLayout>
     </LinearLayout>

@@ -54,7 +54,7 @@ public class GetBookTask extends AsyncTask<String, String, String> {
             httpClient.close();
         }
 
-        Log.d("soa_getBooks", result);
+//        Log.d("soa_getBooks", result);
 
         return result;
     }

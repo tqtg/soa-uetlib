@@ -47,6 +47,16 @@ module.exports = function(app, mongoose, passport) {
 		})
 	});
 
+		/* GET /books/:category/:page */
+	app.get('/books/category/:category', function(req, res, next) {
+		Book.find({
+			'category' : req.params.category
+		}, function(err, post) {
+			if (err) return next(err);
+			res.json(post);
+		})
+	});
+
 	/* GET /books/:category/:page */
 	app.get('/books/category/:category/:page', function(req, res, next) {
 		Book.find({
@@ -61,7 +71,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* POST /books */
-	app.post('/books', isAdmin, function(req, res, next) {
+	app.post('/books', function(req, res, next) {
 		Book.create(req.body, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
@@ -69,7 +79,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* PUT /books */
-	app.put('/books', isAdmin, function(req, res, next) {
+	app.put('/books', function(req, res, next) {
 		Book.update({
 			_id: mongoose.Types.ObjectId(req.body._id)
 		}, {
@@ -82,7 +92,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* PUT /books/:id */
-	app.put('/books/:id', isAdmin, function(req, res, next) {
+	app.put('/books/:id', function(req, res, next) {
 		Book.findByIdAndUpdate(req.params.id, req.body, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
@@ -91,7 +101,7 @@ module.exports = function(app, mongoose, passport) {
 
 
 	/* DELETE /books/:id */
-	app.delete('/books/:id', isAdmin, function(req, res, next) {
+	app.delete('/books/:id', function(req, res, next) {
 		Book.findByIdAndRemove(req.params.id, req.body, function(err, post) {
 			if (err) return next(err);
 			res.json(post);

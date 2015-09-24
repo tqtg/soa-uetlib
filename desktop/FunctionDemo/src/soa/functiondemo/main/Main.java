@@ -15,11 +15,11 @@ public class Main {
 			String result = Function.getAllBooks();
 			parseJSON(result);
 			
-//			JSONObject book = new JSONObject();
-//			book.put("title", "Cho tôi xin một vé về tuổi thơ");
-//			book.put("author", "Nguyễn Nhật Ánh");
-//			Function.createBook(book);
-//			
+			JSONObject book = new JSONObject();
+			book.put("title", "Cho tôi xin một vé về tuổi thơ");
+			book.put("author", "Nguyễn Nhật Ánh");
+			Function.createBook(book);
+			
 //			JSONObject editedBook = new JSONObject();
 //			String id = "55faeb7f09787020112f3d98";
 //			editedBook.put("title", "Cho tôi xin một vé đi tuổi thơ");
