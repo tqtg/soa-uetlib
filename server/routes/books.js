@@ -47,7 +47,7 @@ module.exports = function(app, mongoose, passport) {
 		})
 	});
 
-		/* GET /books/:category/:page */
+	/* GET /books/:category/:page */
 	app.get('/books/category/:category', function(req, res, next) {
 		Book.find({
 			'category' : req.params.category
@@ -69,6 +69,30 @@ module.exports = function(app, mongoose, passport) {
 			res.json(post);
 		})
 	});
+
+	/**
+	* Searching
+	* GET /books/search/:query
+	*/
+	app.get('/books/search/:query', function(req, res, next) {
+		Book.find({
+			'$or' : [{
+				"title": {
+					'$regex' : '.*' + req.params.query + '.*',
+					'$options' : 'i'
+				}
+			}, {
+				"author": {
+					'$regex' : '.*' + req.params.query + '.*',
+					'$options' : 'i'
+				}
+			}]
+		}, function(err, books) {
+			if (err) return next(err);
+			res.json(books);
+		})
+	});
+
 
 	/* POST /books */
 	app.post('/books', function(req, res, next) {

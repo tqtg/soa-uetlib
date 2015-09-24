@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -40,31 +39,12 @@ public class GetImageTask extends AsyncTask<String, Integer, Drawable> {
     {
         //Prepare to download image
         URL url;
-        BufferedOutputStream out;
         InputStream in;
         BufferedInputStream buf;
 
-        //BufferedInputStream buf;
         try {
             url = new URL(_url);
             in = url.openStream();
-
-            /*
-             * THIS IS NOT NEEDED
-             *
-             * YOU TRY TO CREATE AN ACTUAL IMAGE HERE, BY WRITING
-             * TO A NEW FILE
-             * YOU ONLY NEED TO READ THE INPUTSTREAM
-             * AND CONVERT THAT TO A BITMAP
-            out = new BufferedOutputStream(new FileOutputStream("testImage.jpg"));
-            int i;
-
-             while ((i = in.read()) != -1) {
-                 out.write(i);
-             }
-             out.close();
-             in.close();
-             */
 
             // Read the inputstream
             buf = new BufferedInputStream(in);
