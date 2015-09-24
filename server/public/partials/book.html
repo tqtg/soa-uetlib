@@ -55,11 +55,11 @@
                                 </div>
                                 <div id="search">
                                     <div class="inner">
+                                        <input id="query" type="text" name="query">
                                         <div class="button-search">
-                                            <i class="fa fa-search"></i>
+                                            <i ng-click="getBooksBySearch()" class="fa fa-search"></i>
                                             <span>Search</span>
                                         </div>
-                                        <input type="text" name="search">
                                     </div>
                                     
                                 </div>
@@ -78,7 +78,7 @@
                                     <h4 class="list-group-item-heading">Category</h4>
                                 </a>
                                 <li class="list-group-item" ng-repeat="category in categories">
-                                    <a href="#">{{category.name}}</a>
+                                    <a ng-click="getBookByCategory(category.id,1)">{{category.name}}</a>
                                 </li>
                             </div>
                         </div> <!-- END OF CATEGORY DIV -->
@@ -118,7 +118,7 @@
                                 <span aria-hidden="true">&laquo;</span>
                               </a>
                             </li>
-                            <li><a href="#">1</a></li>
+                            <li><a href="/books/page/1">1</a></li>
                             <li><a href="#">2</a></li>
                             <li><a href="#">3</a></li>
                             <li><a href="#">4</a></li>

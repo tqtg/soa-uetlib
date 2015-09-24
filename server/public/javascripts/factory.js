@@ -18,8 +18,17 @@ app.factory('soaFactory', function($http) {
 		return $http.get(urlBase + '/id/' + id);
 	}
 
+	//GET BY PAGE WITHOUT CATEGORY
+	services.getByPage = function(page) {
+		return $http.get(urlBase + '/page/' + page);
+	}
+
 	services.getCategories = function() {
 		return $http.get('/categories');
+	}
+	
+	services.getBySearch = function(query) {
+		return $http.get(urlBase + '/search/' + query);
 	}
 
 	// bookService.saveBook = function(book) {

@@ -1,27 +1,11 @@
-app.controller('BookCtrl', function($rootScope, $scope, soaFactory, ngDialog) {
+app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDialog) {
 	$scope.categories = [];
 	$scope.books = [];
 	$scope.isEditable = [];
 	// --------------------------------------
 	$scope.clickToOpen = function (book) {
         ngDialog.open({
-				    template: '<div id="dialog">\
-				    						<div class="row">\
-				    							<div class="col-md-3 col-md-offset-1">\
-				    								<img src="'+book.image+'">\
-				    							</div>\
-				    							<div class="col-md-7 col-md-offset-1">\
-				    								<h4>'+book.title+'</h4>\
-				    								<p>'+book.author+'</p>\
-				    								<p>Publisher: '+book.publisher+'</p>\
-				    								<p>Date: '+book.date+'</p>\
-				    								<p>Page: '+book.page+'</p>\
-				    								<p>Category: '+book.category+'</p>\
-				    							</div>\
-				    						<div class="">\
-				    						<textarea class="col-md-offset-1 col-md-10" style="min-height:150px;">'+book.description+'</textarea>\
-				    					 </div>',
-				    plain: true,
+				    template: 'partials/dialog.html',
 				    className: 'ngdialog-theme-default'
 				});
     };
@@ -32,12 +16,24 @@ app.controller('BookCtrl', function($rootScope, $scope, soaFactory, ngDialog) {
 		$scope.categories = data.data;
 	})
 
-	// get first 50 books
-	soaFactory.getBooks().then(function(data) {
+	// get first 20 books of page 1 without category
+	soaFactory.getByPage(1).then(function(data) {
 		$scope.books = data.data;
 	})
 
+	$scope.getBookByCategory = function(category, page) {
+		soaFactory.getByCategory(category, page).then(function(data) {
+			$scope.books = data.data;
+		})
+	}
 
+	$scope.getBooksBySearch = function() {
+		query = $("#query").val();
+		// console.log(query);
+		soaFactory.getBySearch(query).then(function(data) {
+			$scope.books = data.data;
+		})
+	}
 	// // save a book to the server
 	// $scope.save = function($event) {
 	// 	if ($event.which == 13 && $scope.bookInput) {

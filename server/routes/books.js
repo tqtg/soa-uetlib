@@ -21,7 +21,7 @@ module.exports = function(app, mongoose, passport) {
 	/* GET books listing. Limit 50 */
 	app.get('/books', function(req, res, next) {
 		Book.find({}, {}, {
-			limit : 50
+			limit : 20
 		}, function(err, books) {
 			if (err) return next(err);
 			res.json(books);
