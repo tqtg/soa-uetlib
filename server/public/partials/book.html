@@ -55,9 +55,9 @@
                                 </div>
                                 <div id="search">
                                     <div class="inner">
-                                        <input id="query" type="text" name="query">
+                                        <input ng-model="query" type="text" ng-keyup="$event.keyCode == 13 && getBooksBySearch(query)">
                                         <div class="button-search">
-                                            <i ng-click="getBooksBySearch()" class="fa fa-search"></i>
+                                            <i ng-click="getBooksBySearch(query)" class="fa fa-search"></i>
                                             <span>Search</span>
                                         </div>
                                     </div>

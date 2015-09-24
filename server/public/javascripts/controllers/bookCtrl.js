@@ -5,11 +5,34 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 	// --------------------------------------
 	$scope.clickToOpen = function (book) {
         ngDialog.open({
-				    template: 'partials/dialog.html',
+				    template: '<div id="dialog">\
+											  <div class="row">\
+											    <div class="col-md-3 col-md-offset-1">\
+											      <img src="'+book.image+'">\
+											    </div>\
+											    <div class="col-md-7 col-md-offset-1">\
+											      <h4>'+book.title+'</h4>\
+											      <p>Tác giả: '+book.author+'</p>\
+											      <p>Nhà xuất bản: '+book.publisher+'</p>\
+											      <p>Ngày xuất bản: '+book.date+'</p>\
+											      <p>Số trang: '+book.page+'</p>\
+											      <p>Thể loại: '+book.category+'</p>\
+											    </div>\
+											  <div class="">\
+											  <textarea class="col-md-offset-1 col-md-10" style="min-height:150px;">'+book.description+'</textarea>\
+											 </div>',
+				    plain: true,
 				    className: 'ngdialog-theme-default'
 				});
     };
    // -----------------------------------------------
+
+  $scope.getBooksBySearch = function(query) {
+		// console.log(query);
+		soaFactory.getBySearch(query).then(function(data) {
+			$scope.books = data.data;
+		})
+	}
 
 	// get categories
 	soaFactory.getCategories().then(function(data) {
@@ -23,14 +46,6 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 
 	$scope.getBookByCategory = function(category, page) {
 		soaFactory.getByCategory(category, page).then(function(data) {
-			$scope.books = data.data;
-		})
-	}
-
-	$scope.getBooksBySearch = function() {
-		query = $("#query").val();
-		// console.log(query);
-		soaFactory.getBySearch(query).then(function(data) {
 			$scope.books = data.data;
 		})
 	}
