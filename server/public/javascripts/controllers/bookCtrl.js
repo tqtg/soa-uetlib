@@ -2,6 +2,7 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 	$scope.categories = [];
 	$scope.books = [];
 	$scope.isEditable = [];
+	$scope.userInfo = [];
 	// --------------------------------------
 	$scope.clickToOpen = function (book) {
         ngDialog.open({
@@ -26,14 +27,6 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 				});
     };
    // -----------------------------------------------
-
-  $scope.getBooksBySearch = function(query) {
-		// console.log(query);
-		soaFactory.getBySearch(query).then(function(data) {
-			$scope.books = data.data;
-		})
-	}
-
 	// get categories
 	soaFactory.getCategories().then(function(data) {
 		$scope.categories = data.data;
@@ -44,9 +37,22 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 		$scope.books = data.data;
 	})
 
+	$scope.getBooksBySearch = function(query) {
+		// console.log(query);
+		soaFactory.getBySearch(query).then(function(data) {
+			$scope.books = data.data;
+		})
+	}
+
 	$scope.getBookByCategory = function(category, page) {
 		soaFactory.getByCategory(category, page).then(function(data) {
 			$scope.books = data.data;
+		})
+	}
+
+	$scope.getUserInformation = function() {
+		soaFactory.getUserInfo().then(function(data) {
+			$scope.userInfo = data.data;
 		})
 	}
 	// // save a book to the server

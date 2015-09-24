@@ -31,6 +31,9 @@ app.factory('soaFactory', function($http) {
 		return $http.get(urlBase + '/search/' + query);
 	}
 
+	services.getUserInfo = function() {
+		return $http.get(urlBase + '/user');
+	}
 	// bookService.saveBook = function(book) {
 	// 	return $http.post(urlBase, book);
 	// }
