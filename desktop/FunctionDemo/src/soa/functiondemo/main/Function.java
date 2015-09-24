@@ -11,8 +11,8 @@ import org.json.simple.JSONObject;
 
 public class Function {
 	private static final String USER_AGENT = "Mozilla/5.0";
-//	private static final String IP = "http://128.199.89.183";
-	private static final String IP = "http://localhost";
+	private static final String IP = "http://128.199.89.183";
+//	private static final String IP = "http://localhost";
 	private static final String PORT = "3000";
 	
 	public static String cookie;
@@ -46,7 +46,7 @@ public class Function {
 	
 	// GET
 	public static String getAllBooks() throws Exception {
-		String url = IP + ":" + PORT + "/books/api";
+		String url = IP + ":" + PORT + "/books";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		
@@ -78,7 +78,7 @@ public class Function {
 	// POST
 	@SuppressWarnings("unchecked")
 	public static void createBook(JSONObject book) throws Exception {
-		String url = IP + ":" + PORT + "/books/api";
+		String url = IP + ":" + PORT + "/books";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -124,7 +124,7 @@ public class Function {
 	// PUT
 	@SuppressWarnings("unchecked")
 	public static void editBook(String id, JSONObject editedBook) throws Exception {
-		String url = IP + ":" + PORT + "/books/api/" + id;
+		String url = IP + ":" + PORT + "/books/" + id;
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -169,7 +169,7 @@ public class Function {
 	
 	// PUT
 	public static void delete(String id) throws Exception {
-		String url = IP + ":" + PORT + "/books/api/" + id;
+		String url = IP + ":" + PORT + "/books/" + id;
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 

@@ -15,18 +15,18 @@ public class Main {
 			String result = Function.getAllBooks();
 			parseJSON(result);
 			
-			JSONObject book = new JSONObject();
-			book.put("title", "Cho tôi xin một vé về tuổi thơ");
-			book.put("author", "Nguyễn Nhật Ánh");
-			Function.createBook(book);
-			
-			JSONObject editedBook = new JSONObject();
-			String id = "55faeb7f09787020112f3d98";
-			editedBook.put("title", "Cho tôi xin một vé đi tuổi thơ");
-			Function.editBook(id, editedBook);
-			
-			String deletedId = "55feebe8cb2cd5020ec97a4f";
-			Function.delete(deletedId);
+//			JSONObject book = new JSONObject();
+//			book.put("title", "Cho tôi xin một vé về tuổi thơ");
+//			book.put("author", "Nguyễn Nhật Ánh");
+//			Function.createBook(book);
+//			
+//			JSONObject editedBook = new JSONObject();
+//			String id = "55faeb7f09787020112f3d98";
+//			editedBook.put("title", "Cho tôi xin một vé đi tuổi thơ");
+//			Function.editBook(id, editedBook);
+//			
+//			String deletedId = "55feebe8cb2cd5020ec97a4f";
+//			Function.delete(deletedId);
 		} else {
 			System.out.println("Wrong username or password!");
 		}

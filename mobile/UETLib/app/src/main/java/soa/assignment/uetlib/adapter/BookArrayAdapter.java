@@ -4,8 +4,6 @@ package soa.assignment.uetlib.adapter;
  * Created by TuanTQ on 9/23/15.
  */
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +18,10 @@ import soa.assignment.uetlib.R;
 import soa.assignment.uetlib.model.BookItem;
 
 public class BookArrayAdapter extends ArrayAdapter<BookItem> {
-    private static final String TAG = "FruitArrayAdapter";
-    private List<BookItem> bookList = new ArrayList<BookItem>();
+    private static final String TAG = "BookArrayAdapter";
+    private List<BookItem> bookList = new ArrayList<>();
 
-    static class FruitViewHolder {
+    static class BookViewHolder {
         ImageView image;
         TextView title;
         TextView author;
@@ -39,6 +37,10 @@ public class BookArrayAdapter extends ArrayAdapter<BookItem> {
         super.add(object);
     }
 
+    public void setBookList(List<BookItem> bookList) {
+        this.bookList = bookList;
+    }
+
     @Override
     public int getCount() {
         return this.bookList.size();
@@ -50,28 +52,28 @@ public class BookArrayAdapter extends ArrayAdapter<BookItem> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         View row = convertView;
-        FruitViewHolder viewHolder;
+        BookViewHolder viewHolder;
+
         if (row == null) {
             LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.book_item_row, parent, false);
-            viewHolder = new FruitViewHolder();
-            viewHolder.image = (ImageView) row.findViewById(R.id.bookImage);
+            viewHolder = new BookViewHolder();
+            viewHolder.image = (ImageView) row.findViewById(R.id.bookCover);
             viewHolder.title = (TextView) row.findViewById(R.id.bookTitle);
             viewHolder.author = (TextView) row.findViewById(R.id.bookAuthor);
             row.setTag(viewHolder);
         } else {
-            viewHolder = (FruitViewHolder)row.getTag();
+            viewHolder = (BookViewHolder)row.getTag();
         }
-        BookItem book = getItem(position);
-//        viewHolder.image.setImageResource(book.getImage());
+
+        final BookItem book = getItem(position);
+        viewHolder.image.setImageDrawable(book.getImage());
         viewHolder.title.setText(book.getTitle());
         viewHolder.author.setText(book.getAuthor());
+
         return row;
     }
 
-    public Bitmap decodeToBitmap(byte[] decodedByte) {
-        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
-    }
 }

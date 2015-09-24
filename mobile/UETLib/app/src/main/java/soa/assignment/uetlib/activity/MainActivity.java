@@ -7,25 +7,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import soa.assignment.uetlib.R;
-import soa.assignment.uetlib.adapter.BookArrayAdapter;
+import soa.assignment.uetlib.fragment.BookFragment;
+import soa.assignment.uetlib.fragment.HomeFragment;
 import soa.assignment.uetlib.model.BookItem;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
-    private BookArrayAdapter bookArrayAdapter;
-    private ListView listView;
-    private static int colorIndex;
+    private HomeFragment homeFragment;
+    private BookFragment bookFragment;
 
-    private static android.os.Handler handler;
+    public static List<BookItem> bookItemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,30 +43,18 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
 
-        colorIndex = 0;
-        listView = (ListView) findViewById(R.id.listView);
-        bookArrayAdapter = new BookArrayAdapter(getApplicationContext(), R.layout.book_item_row);
-        listView.setAdapter(bookArrayAdapter);
+        bookItemList = new ArrayList<>();
+        getBooks(10);
 
-        String url = "http://128.199.89.183:3000/books/page/1";
+        homeFragment = new HomeFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_body, homeFragment).commit();
+    }
 
-        try {
-            String books = new GetBookActivity().execute(url).get();
-            JSONArray bookArray = new JSONArray(books);
-
-            for (int i = 0; i < bookArray.length(); i++) {
-                JSONObject bookObj = bookArray.getJSONObject(i);
-                String image = bookObj.getString("image");
-                String title = bookObj.getString("title");
-                String author = bookObj.getString("author");
-
-                BookItem bookItem = new BookItem(image, title, author);
-                bookArrayAdapter.add(bookItem);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    public void viewBook(Bundle data) {
+//        Toast.makeText(this, "view book detail", Toast.LENGTH_SHORT).show();
+        bookFragment = new BookFragment();
+        bookFragment.setArguments(data);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_body, bookFragment).addToBackStack(null).commit();
     }
 
     @Override
@@ -106,6 +95,21 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             default:
                 Toast.makeText(this, "Default", Toast.LENGTH_SHORT).show();
                 break;
+        }
+    }
+
+    private static void getBooks(int page) {
+        String url = "http://128.199.89.183:3000/books/page/" + String.valueOf(page);
+
+        try {
+            String books = new GetBookTask().execute(url).get();
+            JSONArray bookArray = new JSONArray(books);
+            for (int i = 0; i < bookArray.length(); i++) {
+                BookItem book = new BookItem(bookArray.getJSONObject(i));
+                bookItemList.add(book);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

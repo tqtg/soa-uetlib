@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 /**
  * Created by TuanTQ on 9/23/15.
  */
-public class GetBookActivity extends AsyncTask<String, String, String> {
+public class GetBookTask extends AsyncTask<String, String, String> {
     protected String doInBackground(String... urls) {
         String result = "result";
         String url = urls[0];

@@ -1,20 +1,86 @@
 package soa.assignment.uetlib.model;
 
+import android.graphics.drawable.Drawable;
+
+import org.json.JSONObject;
+
+import soa.assignment.uetlib.activity.GetImageTask;
+
 /**
  * Created by TuanTQ on 9/23/15.
  */
 public class BookItem {
     private static final String TAG = "Book";
 
-    private String image;
     private String title;
     private String author;
+    private String category;
+    private int page;
+    private String publisher;
+    private String date;
+    private String description;
 
-    public BookItem (String image, String title, String author) {
-        super();
-        this.setImage(image);
-        this.setTitle(title);
-        this.setAuthor(author);
+    private Drawable image;
+
+    public BookItem() {
+
+    }
+
+    public BookItem(JSONObject book) {
+        try {
+            this.title = book.getString("title");
+            this.author = book.getString("author");
+            this.description = book.getString("description");
+            this.category = book.getString("category");
+            this.page = book.getInt("page");
+            this.publisher = book.getString("publisher");
+            this.date = book.getString("date");
+
+            String imageLink = book.getString("image");
+            this.image = new GetImageTask().execute(imageLink).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public String getTitle() {
@@ -25,11 +91,11 @@ public class BookItem {
         this.title = title;
     }
 
-    public String getImage() {
+    public Drawable getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(Drawable image) {
         this.image = image;
     }
 
