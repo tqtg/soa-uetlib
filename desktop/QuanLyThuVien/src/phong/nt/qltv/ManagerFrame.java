@@ -16,7 +16,7 @@ public class ManagerFrame extends JFrame {
 	JButton editButton;
 	
 	ManagerFrame(){
-		setTitle("Manager Menu");
+		setTitle("Menu");
 		setSize(300, 400);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -47,7 +47,14 @@ public class ManagerFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				ViewBooksFrame frame;
+				try {
+					frame = new ViewBooksFrame();
+					frame.setVisible(true);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		
@@ -55,7 +62,8 @@ public class ManagerFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				AddNewBookFrame frame = new AddNewBookFrame();
+				frame.setVisible(true);
 			}
 		});
 		

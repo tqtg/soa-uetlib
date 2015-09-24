@@ -60,7 +60,7 @@ public class LogInFrame extends JFrame implements ActionListener {
 		char[] password = passwordText.getPassword();
 
 		if (user.equals("") || password.length == 0) {
-			System.out.println("Invalid username and password!");
+			System.out.println("Error - Invalid username and password!");
 			JOptionPane.showMessageDialog(this, "Plese enter valid username and password!", "Error",
 					JOptionPane.ERROR_MESSAGE);
 		} else {
@@ -71,7 +71,7 @@ public class LogInFrame extends JFrame implements ActionListener {
 			boolean response = true;
 			
 			if (!response) {
-				System.out.println("Wrong username or password!");
+				System.out.println("Error - Wrong username or password!");
 				JOptionPane.showMessageDialog(this, "Wrong username or password!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
