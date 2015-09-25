@@ -48,7 +48,7 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
       if(book.page != null) content = content + '<p><b>Số trang:</b> '+book.page+'</p>';
           
       content = content + '<p><b>Thể loại:</b> '+ cateName+'</p></div>';
-			if(book.description.length < 880){
+			if(book.description.length < 1000){
 				content = content + '<div class="col-md-offset-1 col-md-10">\
 														</br>\
 														<h5><b>Giới thiệu sách: </b></h5>\
@@ -95,6 +95,12 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 		soaFactory.getUserInfo().then(function(data) {
 			$scope.userInfo = data.data;
 		})
+	}
+
+	$scope.nextPage = function(){
+	}
+
+	$scope.backPage = function(){
 	}
 	// // save a book to the server
 	// $scope.save = function($event) {
