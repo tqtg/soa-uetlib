@@ -77,12 +77,24 @@ public class ViewBooksFrame extends JFrame {
 		Action edit = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				JTable table = (JTable) e.getSource();
+				int modelRow = Integer.valueOf(e.getActionCommand());
 				
 			}
 		};
 		
 		ButtonColumn editButtonColumn = new ButtonColumn(table, edit, BookTableModel.EDIT);
 		editButtonColumn.setMnemonic(KeyEvent.VK_E);
+		
+		Action info = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		};
+		
+		ButtonColumn infoButtonColumn = new ButtonColumn(table, info, BookTableModel.MORE_INFO);
+		infoButtonColumn.setMnemonic(KeyEvent.VK_I);
 
 		JScrollPane jsp = new JScrollPane(table);
 		contentPane.add(jsp, BorderLayout.CENTER);
@@ -162,12 +174,13 @@ class BookTableModel extends AbstractTableModel {
 	public final static int DATE = 6;
 	public final static int IMAGE = 7;
 	public final static int DESCRIPTION = 8;
-	public final static int EDIT = 9;
-	public final static int DELETE = 10;
+	public final static int MORE_INFO = 9;
+	public final static int EDIT = 10;
+	public final static int DELETE = 11;
 
 	private List<Book> bookList = new ArrayList<Book>();
 	private String[] columnNames = { "ID", "Title", "Author", "Collection", "Page", "Publisher", "Date", "Image",
-			"Description", "Edit", "Delete" };
+			"Description" , "", "", "" };
 
 	public BookTableModel() {
 
@@ -194,6 +207,9 @@ class BookTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int row, int column) {
+		if (column == MORE_INFO) {
+			return "More info...";
+		}
 		if (column == EDIT) {
 			return "Edit";
 		} else if (column == DELETE) {
