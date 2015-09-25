@@ -11,9 +11,9 @@
                             <div class="col-md-12">
                                 <div class="toprow">
                                     <ul class="links">
-                                        <li class="first"><a class="active" href="#"><i class="fa fa-home"></i>Home</a></li>
+                                        <!-- <li class="first"><a class="active" href="#"><i class="fa fa-home"></i>Home</a></li>
                                         <li><a href="/signup"><i class="fa fa-user"></i>Register</a></li>
-                                        <li><a href=""><i class="fa fa-lock"></i>About us</a></li>
+                                        <li><a href=""><i class="fa fa-lock"></i>About us</a></li> -->
                                     </ul>
                                     <div class="clear"></div>
                                 </div>
@@ -72,10 +72,10 @@
                         <div class="col-md-3">
                             <div class="list-group">
                                 <a class="list-group-item list-group-item-success">
-                                    <h4 class="list-group-item-heading">Category</h4>
+                                    <h4 class="list-group-item-heading" style="padding-top:3px;">Category</h4>
                                 </a>
                                 <li class="list-group-item" ng-repeat="category in categories">
-                                    <a ng-click="getBookByCategory(category.id,1)">{{category.name}}</a>
+                                    <a ng-click="getBookByCategory(category.id,1)" style="color: #666666; font-family: Candara,sans-serif; font-size: 14px; font-weight:;">{{category.name}}</a>
                                 </li>
                             </div>
                         </div> <!-- END OF CATEGORY DIV -->
