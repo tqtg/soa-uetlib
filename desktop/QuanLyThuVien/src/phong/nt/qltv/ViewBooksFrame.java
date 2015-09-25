@@ -1,11 +1,15 @@
 package phong.nt.qltv;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -22,7 +26,7 @@ public class ViewBooksFrame extends JFrame {
 	private JTable table;
 
 	public ViewBooksFrame() throws Exception {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 700, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -31,19 +35,57 @@ public class ViewBooksFrame extends JFrame {
 
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
-		
+
 		JSONArray data = Function.getAllBooks();
 		List<Book> bookList = new ArrayList<Book>();
 		for (Object obj : data) {
 			JSONObject object = (JSONObject) obj;
 			bookList.add(new Book(object));
 		}
-		
+
 		BookTableModel model = new BookTableModel(bookList);
 		table = new JTable(model);
 
+		Action delete = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				JTable table = (JTable) e.getSource();
+				int modelRow = Integer.valueOf(e.getActionCommand());
+				String id = (String) ((BookTableModel) table.getModel()).getValueAt(modelRow, BookTableModel.ID);
+				String title = (String) ((BookTableModel) table.getModel()).getValueAt(modelRow, BookTableModel.TITLE);
+				int deleteResponse = JOptionPane.showConfirmDialog(null,
+						"Do you want to delete this book: " + title + "?", "Confirm", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE);
+				if (deleteResponse == JOptionPane.NO_OPTION) {
+
+				} else if (deleteResponse == JOptionPane.YES_OPTION) {
+					try {
+						Function.delete(id);
+						((BookTableModel) table.getModel()).deleteRow(modelRow);
+						System.out.println("Book deleted! " + id + " " + title);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				} else if (deleteResponse == JOptionPane.CLOSED_OPTION) {
+
+				}
+			}
+		};
+
+		ButtonColumn deleteButtonColumn = new ButtonColumn(table, delete, BookTableModel.DELETE);
+		deleteButtonColumn.setMnemonic(KeyEvent.VK_D);
+
+		Action edit = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		};
+		
+		ButtonColumn editButtonColumn = new ButtonColumn(table, edit, BookTableModel.EDIT);
+		editButtonColumn.setMnemonic(KeyEvent.VK_E);
+
 		JScrollPane jsp = new JScrollPane(table);
-        contentPane.add(jsp, BorderLayout.CENTER);
+		contentPane.add(jsp, BorderLayout.CENTER);
 	}
 
 }
@@ -133,9 +175,6 @@ class BookTableModel extends AbstractTableModel {
 
 	public BookTableModel(List<Book> bookList) {
 		this.bookList = bookList;
-//		for (int i = 0; i< this.bookList.size(); i++){
-//			System.out.println(this.bookList.get(i).getId());
-//		}
 	}
 
 	@Override
@@ -156,9 +195,9 @@ class BookTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int row, int column) {
 		if (column == EDIT) {
-			return (Object) new JButton("Edit");
+			return "Edit";
 		} else if (column == DELETE) {
-			return (Object) new JButton("Delete");
+			return "Delete";
 		} else {
 			Object bookAttribute = null;
 			Book book = bookList.get(row);
@@ -193,6 +232,19 @@ class BookTableModel extends AbstractTableModel {
 			}
 			return bookAttribute;
 		}
+	}
+
+	@Override
+	public boolean isCellEditable(int row, int column) {
+		if (column == EDIT || column == DELETE) {
+			return true;
+		}
+		return false;
+	}
+
+	public void deleteRow(int row) {
+		bookList.remove(row);
+		fireTableRowsDeleted(row, row);
 	}
 
 }
