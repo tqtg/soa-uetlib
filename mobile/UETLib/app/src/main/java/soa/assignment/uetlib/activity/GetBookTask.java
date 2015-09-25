@@ -1,5 +1,7 @@
 package soa.assignment.uetlib.activity;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -19,6 +21,19 @@ import java.io.InputStreamReader;
  * Created by TuanTQ on 9/23/15.
  */
 public class GetBookTask extends AsyncTask<String, String, String> {
+    private Context context;
+    private ProgressDialog loadingDialog;
+
+    public GetBookTask(Context context) {
+        this.context = context;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+//        loadingDialog = ProgressDialog.show(context, "", "Loading");
+    }
+
     protected String doInBackground(String... urls) {
         String result = "result";
         String url = urls[0];
@@ -65,6 +80,7 @@ public class GetBookTask extends AsyncTask<String, String, String> {
 
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+//        loadingDialog.dismiss();
     }
 
     private static String convertStreamToString(InputStream is) {

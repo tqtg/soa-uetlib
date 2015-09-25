@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -17,13 +18,16 @@ import soa.assignment.uetlib.adapter.BookArrayAdapter;
 public class HomeFragment extends android.support.v4.app.Fragment {
     private BookArrayAdapter bookArrayAdapter;
     private ListView listView;
+    private boolean flag_loading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ((MainActivity)getActivity()).getBooks();
         bookArrayAdapter = new BookArrayAdapter(getActivity().getApplicationContext(), R.layout.book_item_row);
         bookArrayAdapter.setBookList(MainActivity.bookItemList);
+        flag_loading = false;
     }
 
     @Override
@@ -34,14 +38,43 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Bundle data = new Bundle();
-                data.putInt("index", i);
+                ((MainActivity) getActivity()).viewBook(i);
+            }
+        });
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                int threshold = 1;
+                int count = listView.getCount();
 
-                ((MainActivity) getActivity()).viewBook(data);
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    if (listView.getLastVisiblePosition() >= count - threshold) {
+                        // Execute LoadMoreDataTask AsyncTask
+                        additems();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                if(firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0)
+//                {
+//                    if (flag_loading == false)
+//                    {
+//                        flag_loading = true;
+//                        additems();
+//                    }
+//                }
             }
         });
 
-
         return view;
+    }
+
+    private void additems() {
+        ((MainActivity)getActivity()).getBooks();
+        bookArrayAdapter.notifyDataSetChanged();
+        flag_loading = false;
     }
 }
