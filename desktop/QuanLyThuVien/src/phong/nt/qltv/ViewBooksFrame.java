@@ -61,6 +61,7 @@ public class ViewBooksFrame extends JFrame {
 					try {
 						Function.delete(id);
 						((BookTableModel) table.getModel()).deleteRow(modelRow);
+						data.remove(modelRow);
 						System.out.println("Book deleted! " + id + " " + title);
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -75,24 +76,42 @@ public class ViewBooksFrame extends JFrame {
 		deleteButtonColumn.setMnemonic(KeyEvent.VK_D);
 
 		Action edit = new AbstractAction() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JTable table = (JTable) e.getSource();
 				int modelRow = Integer.valueOf(e.getActionCommand());
-				
+				// String id = (String) ((BookTableModel)
+				// table.getModel()).getValueAt(modelRow, BookTableModel.ID);
+				// System.out.println(id);
+				JSONObject obj = (JSONObject) data.get(modelRow);
+				// System.out.println((String) obj.get("_id"));
+
+				EditBookFrame frame = new EditBookFrame(obj);
+				frame.setVisible(true);
+
+				boolean response = frame.getResponseCode();
+				if (response) {
+					JSONObject newBook = frame.getNewBook();
+					((BookTableModel) table.getModel()).editRow(modelRow, new Book(newBook));
+					data.remove(modelRow);
+					data.add(modelRow, newBook);
+					System.out.println("Book edited! " + (String) newBook.get("_id"));
+				}
+
 			}
 		};
-		
+
 		ButtonColumn editButtonColumn = new ButtonColumn(table, edit, BookTableModel.EDIT);
 		editButtonColumn.setMnemonic(KeyEvent.VK_E);
-		
+
 		Action info = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
 		};
-		
+
 		ButtonColumn infoButtonColumn = new ButtonColumn(table, info, BookTableModel.MORE_INFO);
 		infoButtonColumn.setMnemonic(KeyEvent.VK_I);
 
@@ -106,7 +125,7 @@ class Book {
 	private String id;
 	private String title;
 	private String author;
-	private String collection;
+	private String category;
 	private Long page;
 	private String publisher;
 	private String date;
@@ -117,7 +136,7 @@ class Book {
 		this.id = (String) obj.get("_id");
 		this.title = (String) obj.get("title");
 		this.author = (String) obj.get("author");
-		this.collection = (String) obj.get("collection");
+		this.category = (String) obj.get("category");
 		this.page = (Long) obj.get("page");
 		this.publisher = (String) obj.get("publisher");
 		this.date = (String) obj.get("date");
@@ -137,8 +156,8 @@ class Book {
 		return author;
 	}
 
-	public String getCollection() {
-		return collection;
+	public String getCategory() {
+		return category;
 	}
 
 	public Long getPage() {
@@ -168,7 +187,7 @@ class BookTableModel extends AbstractTableModel {
 	public final static int ID = 0;
 	public final static int TITLE = 1;
 	public final static int AUTHOR = 2;
-	public final static int COLLECTION = 3;
+	public final static int CATEGORY = 3;
 	public final static int PAGE = 4;
 	public final static int PUBLISHER = 5;
 	public final static int DATE = 6;
@@ -179,8 +198,8 @@ class BookTableModel extends AbstractTableModel {
 	public final static int DELETE = 11;
 
 	private List<Book> bookList = new ArrayList<Book>();
-	private String[] columnNames = { "ID", "Title", "Author", "Collection", "Page", "Publisher", "Date", "Image",
-			"Description" , "", "", "" };
+	private String[] columnNames = { "ID", "Title", "Author", "Category", "Page", "Publisher", "Date", "Image",
+			"Description", "", "", "" };
 
 	public BookTableModel() {
 
@@ -227,8 +246,15 @@ class BookTableModel extends AbstractTableModel {
 			case AUTHOR:
 				bookAttribute = book.getAuthor();
 				break;
-			case COLLECTION:
-				bookAttribute = book.getCollection();
+			case CATEGORY:
+				String catCode = book.getCategory();
+				String collection;
+				if (catCode == null) {
+					collection = "";
+				} else {
+					collection = Helper.collectionOfCode(catCode);
+				}
+				bookAttribute = collection;
 				break;
 			case PAGE:
 				bookAttribute = book.getPage();
@@ -252,7 +278,7 @@ class BookTableModel extends AbstractTableModel {
 
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		if (column == EDIT || column == DELETE) {
+		if (column == MORE_INFO || column == EDIT || column == DELETE) {
 			return true;
 		}
 		return false;
@@ -261,6 +287,12 @@ class BookTableModel extends AbstractTableModel {
 	public void deleteRow(int row) {
 		bookList.remove(row);
 		fireTableRowsDeleted(row, row);
+	}
+	
+	public void editRow(int row, Book newBookData){
+		bookList.remove(row);
+		bookList.add(row, newBookData);
+		fireTableDataChanged();
 	}
 
 }
