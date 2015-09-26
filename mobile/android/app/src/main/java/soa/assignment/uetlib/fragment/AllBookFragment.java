@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import soa.assignment.uetlib.R;
-import soa.assignment.uetlib.activity.MainActivity;
+import soa.assignment.uetlib.activity.HomeActivity;
 import soa.assignment.uetlib.adapter.BookArrayAdapter;
 
 /**
@@ -25,12 +25,12 @@ public class AllBookFragment extends android.support.v4.app.Fragment {
 
         listView = (ListView) view.findViewById(R.id.listView);
         bookArrayAdapter = new BookArrayAdapter(getActivity().getApplicationContext(), R.layout.book_item_row);
-        bookArrayAdapter.setBookList(MainActivity.bookItemList);
+        bookArrayAdapter.setBookList(HomeActivity.bookItemList);
         listView.setAdapter(bookArrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ((MainActivity) getActivity()).viewBook(i);
+                ((HomeActivity) getActivity()).viewBook(i);
             }
         });
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -59,7 +59,7 @@ public class AllBookFragment extends android.support.v4.app.Fragment {
     }
 
     private void addItems() {
-        ((MainActivity) getActivity()).getBooks();
+        ((HomeActivity) getActivity()).getBooks();
         bookArrayAdapter.notifyDataSetChanged();
     }
 }

@@ -23,7 +23,7 @@ import soa.assignment.uetlib.model.Book;
 import soa.assignment.uetlib.model.Category;
 
 
-public class MainActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home);
 
 //        categoryItemList = new ArrayList<>();
         bookItemList = new ArrayList<>();

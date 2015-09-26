@@ -118,6 +118,10 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void search() {
+        bookItemList.clear();
+        bookArrayAdapter.clear();
+        bookArrayAdapter.notifyDataSetChanged();
+
         InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
@@ -137,6 +141,11 @@ public class SearchActivity extends AppCompatActivity {
         try {
             String data = new GetJSONDataTask(this).execute(url).get();
             JSONArray bookArray = new JSONArray(data);
+
+            if (bookArray.length() == 0) {
+
+            }
+
             for (int i = 0; i < bookArray.length(); i++) {
                 Book book = new Book(bookArray.getJSONObject(i));
                 bookItemList.add(book);
@@ -152,7 +161,6 @@ public class SearchActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with delete
                             dialog.cancel();
-                            search.setText("");
                         }
                     })
                     .show();

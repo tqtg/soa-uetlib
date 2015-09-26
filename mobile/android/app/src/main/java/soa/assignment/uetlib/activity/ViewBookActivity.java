@@ -30,7 +30,7 @@ public class ViewBookActivity extends AppCompatActivity {
         Book book = new Book();
         switch (from) {
             case 1:
-                book = MainActivity.bookItemList.get(i);
+                book = HomeActivity.bookItemList.get(i);
                 break;
             case 2:
                 book = ViewCategoryActivity.bookItemList.get(i);

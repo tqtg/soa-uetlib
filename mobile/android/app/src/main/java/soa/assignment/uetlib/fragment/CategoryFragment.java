@@ -8,7 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import soa.assignment.uetlib.R;
-import soa.assignment.uetlib.activity.MainActivity;
+import soa.assignment.uetlib.activity.HomeActivity;
 import soa.assignment.uetlib.adapter.CategoryArrayAdapter;
 import soa.assignment.uetlib.model.Category;
 
@@ -24,7 +24,7 @@ public class CategoryFragment extends android.support.v4.app.Fragment {
         super.onCreate(savedInstanceState);
 
         categoryArrayAdapter = new CategoryArrayAdapter(getActivity().getApplicationContext(), R.layout.category_item_row);
-//        categoryArrayAdapter.setCategoryList(MainActivity.categoryItemList);
+//        categoryArrayAdapter.setCategoryList(HomeActivity.categoryItemList);
 
         categoryArrayAdapter.add(new Category("c320", "Sách Tiếng Anh"));
         categoryArrayAdapter.add(new Category("c839", "Sách Văn Học - Tiểu Thuyết"));
@@ -53,9 +53,9 @@ public class CategoryFragment extends android.support.v4.app.Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                ((MainActivity) getActivity()).viewCategory(i);
+//                ((HomeActivity) getActivity()).viewCategory(i);
                 Category category = categoryArrayAdapter.getItem(i);
-                ((MainActivity) getActivity()).viewCategory(category.getId(), category.getName());
+                ((HomeActivity) getActivity()).viewCategory(category.getId(), category.getName());
             }
         });
 
