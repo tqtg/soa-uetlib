@@ -1,11 +1,15 @@
 package phong.nt.qltv;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -22,7 +26,7 @@ public class ViewBooksFrame extends JFrame {
 	private JTable table;
 
 	public ViewBooksFrame() throws Exception {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 700, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -31,19 +35,88 @@ public class ViewBooksFrame extends JFrame {
 
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
-		
+
 		JSONArray data = Function.getAllBooks();
 		List<Book> bookList = new ArrayList<Book>();
 		for (Object obj : data) {
 			JSONObject object = (JSONObject) obj;
 			bookList.add(new Book(object));
 		}
-		
+
 		BookTableModel model = new BookTableModel(bookList);
 		table = new JTable(model);
 
+		Action delete = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				JTable table = (JTable) e.getSource();
+				int modelRow = Integer.valueOf(e.getActionCommand());
+				String id = (String) ((BookTableModel) table.getModel()).getValueAt(modelRow, BookTableModel.ID);
+				String title = (String) ((BookTableModel) table.getModel()).getValueAt(modelRow, BookTableModel.TITLE);
+				int deleteResponse = JOptionPane.showConfirmDialog(null,
+						"Do you want to delete this book: " + title + "?", "Confirm", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE);
+				if (deleteResponse == JOptionPane.NO_OPTION) {
+
+				} else if (deleteResponse == JOptionPane.YES_OPTION) {
+					try {
+						Function.delete(id);
+						((BookTableModel) table.getModel()).deleteRow(modelRow);
+						data.remove(modelRow);
+						System.out.println("Book deleted! " + id + " " + title);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				} else if (deleteResponse == JOptionPane.CLOSED_OPTION) {
+
+				}
+			}
+		};
+
+		ButtonColumn deleteButtonColumn = new ButtonColumn(table, delete, BookTableModel.DELETE);
+		deleteButtonColumn.setMnemonic(KeyEvent.VK_D);
+
+		Action edit = new AbstractAction() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JTable table = (JTable) e.getSource();
+				int modelRow = Integer.valueOf(e.getActionCommand());
+				// String id = (String) ((BookTableModel)
+				// table.getModel()).getValueAt(modelRow, BookTableModel.ID);
+				// System.out.println(id);
+				JSONObject obj = (JSONObject) data.get(modelRow);
+				// System.out.println((String) obj.get("_id"));
+
+				EditBookFrame frame = new EditBookFrame(obj);
+				frame.setVisible(true);
+
+				boolean response = frame.getResponseCode();
+				if (response) {
+					JSONObject newBook = frame.getNewBook();
+					((BookTableModel) table.getModel()).editRow(modelRow, new Book(newBook));
+					data.remove(modelRow);
+					data.add(modelRow, newBook);
+					System.out.println("Book edited! " + (String) newBook.get("_id"));
+				}
+
+			}
+		};
+
+		ButtonColumn editButtonColumn = new ButtonColumn(table, edit, BookTableModel.EDIT);
+		editButtonColumn.setMnemonic(KeyEvent.VK_E);
+
+		Action info = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		};
+
+		ButtonColumn infoButtonColumn = new ButtonColumn(table, info, BookTableModel.MORE_INFO);
+		infoButtonColumn.setMnemonic(KeyEvent.VK_I);
+
 		JScrollPane jsp = new JScrollPane(table);
-        contentPane.add(jsp, BorderLayout.CENTER);
+		contentPane.add(jsp, BorderLayout.CENTER);
 	}
 
 }
@@ -52,7 +125,7 @@ class Book {
 	private String id;
 	private String title;
 	private String author;
-	private String collection;
+	private String category;
 	private Long page;
 	private String publisher;
 	private String date;
@@ -63,7 +136,7 @@ class Book {
 		this.id = (String) obj.get("_id");
 		this.title = (String) obj.get("title");
 		this.author = (String) obj.get("author");
-		this.collection = (String) obj.get("collection");
+		this.category = (String) obj.get("category");
 		this.page = (Long) obj.get("page");
 		this.publisher = (String) obj.get("publisher");
 		this.date = (String) obj.get("date");
@@ -83,8 +156,8 @@ class Book {
 		return author;
 	}
 
-	public String getCollection() {
-		return collection;
+	public String getCategory() {
+		return category;
 	}
 
 	public Long getPage() {
@@ -114,18 +187,19 @@ class BookTableModel extends AbstractTableModel {
 	public final static int ID = 0;
 	public final static int TITLE = 1;
 	public final static int AUTHOR = 2;
-	public final static int COLLECTION = 3;
+	public final static int CATEGORY = 3;
 	public final static int PAGE = 4;
 	public final static int PUBLISHER = 5;
 	public final static int DATE = 6;
 	public final static int IMAGE = 7;
 	public final static int DESCRIPTION = 8;
-	public final static int EDIT = 9;
-	public final static int DELETE = 10;
+	public final static int MORE_INFO = 9;
+	public final static int EDIT = 10;
+	public final static int DELETE = 11;
 
 	private List<Book> bookList = new ArrayList<Book>();
-	private String[] columnNames = { "ID", "Title", "Author", "Collection", "Page", "Publisher", "Date", "Image",
-			"Description", "Edit", "Delete" };
+	private String[] columnNames = { "ID", "Title", "Author", "Category", "Page", "Publisher", "Date", "Image",
+			"Description", "", "", "" };
 
 	public BookTableModel() {
 
@@ -133,9 +207,6 @@ class BookTableModel extends AbstractTableModel {
 
 	public BookTableModel(List<Book> bookList) {
 		this.bookList = bookList;
-//		for (int i = 0; i< this.bookList.size(); i++){
-//			System.out.println(this.bookList.get(i).getId());
-//		}
 	}
 
 	@Override
@@ -155,10 +226,13 @@ class BookTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int row, int column) {
+		if (column == MORE_INFO) {
+			return "More info...";
+		}
 		if (column == EDIT) {
-			return (Object) new JButton("Edit");
+			return "Edit";
 		} else if (column == DELETE) {
-			return (Object) new JButton("Delete");
+			return "Delete";
 		} else {
 			Object bookAttribute = null;
 			Book book = bookList.get(row);
@@ -172,8 +246,15 @@ class BookTableModel extends AbstractTableModel {
 			case AUTHOR:
 				bookAttribute = book.getAuthor();
 				break;
-			case COLLECTION:
-				bookAttribute = book.getCollection();
+			case CATEGORY:
+				String catCode = book.getCategory();
+				String collection;
+				if (catCode == null) {
+					collection = "";
+				} else {
+					collection = Helper.collectionOfCode(catCode);
+				}
+				bookAttribute = collection;
 				break;
 			case PAGE:
 				bookAttribute = book.getPage();
@@ -193,6 +274,25 @@ class BookTableModel extends AbstractTableModel {
 			}
 			return bookAttribute;
 		}
+	}
+
+	@Override
+	public boolean isCellEditable(int row, int column) {
+		if (column == MORE_INFO || column == EDIT || column == DELETE) {
+			return true;
+		}
+		return false;
+	}
+
+	public void deleteRow(int row) {
+		bookList.remove(row);
+		fireTableRowsDeleted(row, row);
+	}
+	
+	public void editRow(int row, Book newBookData){
+		bookList.remove(row);
+		bookList.add(row, newBookData);
+		fireTableDataChanged();
 	}
 
 }

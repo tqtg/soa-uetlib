@@ -59,8 +59,8 @@
 }
 
 .ngdialog.ngdialog-theme-default {
-  padding-bottom: 160px;
-  padding-top: 160px;
+  padding-bottom: 0px;
+  padding-top: 60px;
 }
 
 .ngdialog.ngdialog-theme-default.ngdialog-closing .ngdialog-content {
@@ -71,7 +71,7 @@
 .ngdialog.ngdialog-theme-default .ngdialog-content {
   -webkit-animation: ngdialog-flyin .5s;
   animation: ngdialog-flyin .5s;
-  background: rgba(255,255,255,.96);
+  background: rgba(255,255,255,.93);
   border-radius: 3px;
   color: #444;
   font-family: 'Helvetica',sans-serif;
@@ -81,7 +81,7 @@
   max-width: 100%;
   padding: 1em;
   position: relative;
-  width: 700px;  /*MODIFY TO CHANGE THE WIDTH*/
+  width: 850px;  /*MODIFY TO CHANGE THE WIDTH*/
 }
 
 .ngdialog.ngdialog-theme-default .ngdialog-close {

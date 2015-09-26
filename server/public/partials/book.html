@@ -11,32 +11,29 @@
                             <div class="col-md-12">
                                 <div class="toprow">
                                     <ul class="links">
-                                        <li class="first"><a class="active" href="#"><i class="fa fa-home"></i>Home</a></li>
-                                        <li><a class="" href="#"><i class="fa fa-user"></i>Register</a></li>
-                                        <li><a href="#"><i class="fa fa-user"></i>Login</a></li>
-                                        <li class="login_h last"><a href="#"><i class="fa fa-lock"></i>About us</a></li>
+                                        <!-- <li class="first"><a class="active" href="#"><i class="fa fa-home"></i>Home</a></li>
+                                        <li><a href="/signup"><i class="fa fa-user"></i>Register</a></li>
+                                        <li><a href=""><i class="fa fa-lock"></i>About us</a></li> -->
                                     </ul>
                                     <div class="clear"></div>
                                 </div>
+                                <!-- <i class="fa fa-angle-down"></i> -->
                                 <div class="cart-position">
                                     <div class="cart-inner">
-                                        <div id="cart" class="">
-                                            <div class="heading">
-                                                <span class="link_a">
-                                                    <i class="fa fa-shopping-cart"></i>
-                                                    <b>Cart:</b>
-                                                    <span class="sc-button"></span>
-                                                    <span id="cart-total2">0</span>
-                                                    <span id="cart-total">0 item(s) $0.00</span>
-                                                    <i class="fa fa-angle-down"></i>
-                                                    <span class="clear"></span>
-                                                </span>
-                                            </div>
-                                            <div class="content">
-                                                <div class="content-scroll">
-                                                    <div class="empty">Your shopping cart is empty!</div>
+                                        <div class="heading">
+                                            <span class="link_a">
+                                                <div class="dropdown">
+                                                    <i class="fa fa-user fa-lg"></i>
+                                                    WELCOME
+                                                    <b>GIAPLV</b>
+                                                    <a class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                        <i class="fa fa-angle-down"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                                        <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                                    </ul>
                                                 </div>
-                                            </div>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -55,11 +52,11 @@
                                 </div>
                                 <div id="search">
                                     <div class="inner">
+                                        <input ng-model="query" type="text" ng-keyup="$event.keyCode == 13 && getBooksBySearch(query)">
                                         <div class="button-search">
-                                            <i class="fa fa-search"></i>
+                                            <i ng-click="getBooksBySearch(query)" class="fa fa-search"></i>
                                             <span>Search</span>
                                         </div>
-                                        <input type="text" name="search">
                                     </div>
                                     
                                 </div>
@@ -75,10 +72,10 @@
                         <div class="col-md-3">
                             <div class="list-group">
                                 <a class="list-group-item list-group-item-success">
-                                    <h4 class="list-group-item-heading">Category</h4>
+                                    <h4 class="list-group-item-heading" style="padding-top:3px;">Category</h4>
                                 </a>
                                 <li class="list-group-item" ng-repeat="category in categories">
-                                    <a href="#">{{category.name}}</a>
+                                    <a ng-click="getBookByCategory(category.id,1)" style="color: #666666; font-family: Candara,sans-serif; font-size: 14px; font-weight:;">{{category.name}}</a>
                                 </li>
                             </div>
                         </div> <!-- END OF CATEGORY DIV -->
@@ -111,24 +108,12 @@
                                 </div>
                             </div>
                         </div>
-                        <nav class="col-md-offset-4">
-                          <ul class="pagination">
-                            <li>
-                              <a href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                              </a>
-                            </li>
-                            <li><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li>
-                              <a href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                              </a>
-                            </li>
-                          </ul>
+                        <!-- <nav class="col-md-offset-4"> -->
+                        <nav class="scol-md-offset-4">
+                            <ul class="pager">
+                                <li class="disabled"><a href="#"><span aria-hidden="true">&larr;</span> Back Page</a></li>
+                                <li class=""><a href="#">Next Page <span aria-hidden="true">&rarr;</span></a></li>
+                            </ul>
                         </nav>
                     </div>
                 </div>

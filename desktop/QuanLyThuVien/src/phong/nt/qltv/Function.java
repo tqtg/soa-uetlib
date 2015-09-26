@@ -94,8 +94,8 @@ public class Function {
 	
 	// PUT
 	@SuppressWarnings("unchecked")
-	public static void editBook(String id, JSONObject editedBook) throws Exception {
-		String url = IP + ":" + PORT + "/books/api/" + id;
+	public static int editBook(String id, JSONObject editedBook) throws Exception {
+		String url = IP + ":" + PORT + "/books/" + id;
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -135,11 +135,13 @@ public class Function {
 		
 		//print result
 		System.out.println(response.toString());
+		
+		return responseCode;
 	}
 	
 	// PUT
 	public static void delete(String id) throws Exception {
-		String url = IP + ":" + PORT + "/books/api/" + id;
+		String url = IP + ":" + PORT + "/books/" + id;
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
