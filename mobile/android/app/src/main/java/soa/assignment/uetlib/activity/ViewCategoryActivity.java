@@ -66,7 +66,6 @@ public class ViewCategoryActivity extends AppCompatActivity {
                     if (listView.getLastVisiblePosition() >= count - threshold) {
                         // Execute LoadMoreDataTask AsyncTask
                         getBooks();
-                        bookArrayAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -116,6 +115,7 @@ public class ViewCategoryActivity extends AppCompatActivity {
         }
 
         page++;
+        bookArrayAdapter.notifyDataSetChanged();
     }
 
     public void viewBook(int i) {
