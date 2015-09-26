@@ -33,12 +33,10 @@ public class ViewCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_category);
 
+        bookItemList = new ArrayList<>();
+
         id = getIntent().getExtras().getString("id");
         name = getIntent().getExtras().getString("name");
-
-        bookItemList = new ArrayList<>();
-        page = 1;
-        getBooks();
 
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,6 +73,9 @@ public class ViewCategoryActivity extends AppCompatActivity {
 
             }
         });
+
+        page = 1;
+        getBooks();
     }
 
     @Override
@@ -121,7 +122,7 @@ public class ViewCategoryActivity extends AppCompatActivity {
     public void viewBook(int i) {
         Intent viewBook = new Intent(this, ViewBookActivity.class);
         viewBook.putExtra("index", i);
-        viewBook.putExtra("category", true);
+        viewBook.putExtra("from", 2);
         startActivity(viewBook);
     }
 }

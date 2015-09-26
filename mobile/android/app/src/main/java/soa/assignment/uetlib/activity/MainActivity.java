@@ -4,11 +4,13 @@ package soa.assignment.uetlib.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.json.JSONArray;
 
@@ -37,14 +39,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startActivity(new Intent(this, SearchActivity.class));
-
 //        categoryItemList = new ArrayList<>();
-//        getCategories();
-
         bookItemList = new ArrayList<>();
-        page = 7;
-//        getBooks();
 
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Home"));
@@ -73,6 +69,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        FloatingActionButton myFab = (FloatingActionButton) findViewById(R.id.myFAB);
+        myFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                search();
+            }
+        });
+
+//        getCategories();
+        page = 7;
+        getBooks();
+    }
+
+    private void search() {
+        startActivity(new Intent(this, SearchActivity.class));
     }
 
     @Override
@@ -124,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
     public void viewBook(int i) {
         Intent viewBook = new Intent(this, ViewBookActivity.class);
         viewBook.putExtra("index", i);
-        viewBook.putExtra("category", false);
+        viewBook.putExtra("from", 1);
         startActivity(viewBook);
     }
 

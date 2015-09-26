@@ -26,11 +26,18 @@ public class ViewBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_book);
         
         int i = getIntent().getExtras().getInt("index");
-        Book book;
-        if (getIntent().getExtras().getBoolean("category")) {
-            book = ViewCategoryActivity.bookItemList.get(i);
-        } else {
-            book = MainActivity.bookItemList.get(i);
+        int from = getIntent().getExtras().getInt("from");
+        Book book = new Book();
+        switch (from) {
+            case 1:
+                book = MainActivity.bookItemList.get(i);
+                break;
+            case 2:
+                book = ViewCategoryActivity.bookItemList.get(i);
+                break;
+            case 3:
+                book = SearchActivity.bookItemList.get(i);
+                break;
         }
 
         String title = book.getTitle();

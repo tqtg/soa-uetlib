@@ -2,6 +2,7 @@ package soa.assignment.uetlib.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -69,7 +70,7 @@ public class SearchActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                viewBook(i);
+                viewBook(i);
             }
         });
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -161,5 +162,12 @@ public class SearchActivity extends AppCompatActivity {
             page++;
             bookArrayAdapter.notifyDataSetChanged();
         }
+    }
+
+    public void viewBook(int i) {
+        Intent viewBook = new Intent(this, ViewBookActivity.class);
+        viewBook.putExtra("index", i);
+        viewBook.putExtra("from", 3);
+        startActivity(viewBook);
     }
 }
