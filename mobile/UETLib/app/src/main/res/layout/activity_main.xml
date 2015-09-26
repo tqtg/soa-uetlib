@@ -32,7 +32,6 @@
 
     </LinearLayout>
 
-
     <fragment
         android:id="@+id/fragment_navigation_drawer"
         android:name="soa.assignment.uetlib.activity.FragmentDrawer"
