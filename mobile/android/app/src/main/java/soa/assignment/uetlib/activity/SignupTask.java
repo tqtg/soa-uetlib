@@ -30,11 +30,11 @@ public class SignupTask extends AsyncTask<String, String, Boolean> {
         AndroidHttpClient httpClient = AndroidHttpClient.newInstance("SOA");
         HttpPost httpPost = new HttpPost(url);
 
-        Log.d("soa_login", "authenticating...");
+        Log.d("soa_signup", "signing up...");
 
         try {
             HttpResponse response = httpClient.execute(httpPost);
-            Log.d("soa_login", String.valueOf(response.getStatusLine().getStatusCode()));
+            Log.d("soa_signup", response.getStatusLine().getReasonPhrase());
             if (response.getStatusLine().getStatusCode() == 200)
                 return true;
         } catch (ClientProtocolException e) {

@@ -90,9 +90,9 @@ public class LoginActivity extends AppCompatActivity {
 
             String url = "http://128.199.89.183:3000/mobile/login";
             try {
-                boolean isLogin = new LoginTask(username, password).execute(url).get();
+                boolean isOK = new LoginTask(username, password).execute(url).get();
                 progressDialog.cancel();
-                if (isLogin) {
+                if (isOK) {
                     goHome();
                 } else {
                     showDialog("Wrong username or password!");
