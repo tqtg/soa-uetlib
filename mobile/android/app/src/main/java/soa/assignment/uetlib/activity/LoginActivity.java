@@ -1,25 +1,17 @@
 package soa.assignment.uetlib.activity;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import soa.assignment.uetlib.R;
 
@@ -58,47 +50,58 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void showDialog(String message) {
+        new AlertDialog.Builder(this)
+                .setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        dialog.cancel();
+                    }
+                })
+                .show();
+    }
+
     private void goHome() {
         Intent home = new Intent(this, HomeActivity.class);
         startActivity(home);
         finish();
     }
 
-    private void login() {
+    private boolean validate() {
         String username = usernameInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        String url = "128.199.89.183:3000/login";
-        HttpGet request = new HttpGet(url);
-        AndroidHttpClient httpClient = AndroidHttpClient.newInstance("SOA");
+        if (username.isEmpty() || password.isEmpty()) return false;
 
-        try {
-            HttpResponse response = httpClient.execute(request);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK)
-            {
-                Log.d("soa_getData", "OK!");
+        return true;
+    }
 
-                HttpEntity entity = response.getEntity();
-                // If the response does not enclose an entity, there is no need
-                // to worry about connection release
+    private void login() {
+        if (validate()) {
+            String username = usernameInput.getText().toString();
+            String password = passwordInput.getText().toString();
 
-                if (entity != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+                    R.style.Theme_AppCompat_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Authenticating...");
+            progressDialog.show();
 
-                    // A Simple JSON Response Read
-                    InputStream instream = entity.getContent();
-                    result = convertStreamToString(instream);
-                    // now you have the string representation of the HTML request
-                    instream.close();
+            String url = "http://128.199.89.183:3000/mobile/login";
+            try {
+                boolean isLogin = new LoginTask(username, password).execute(url).get();
+                progressDialog.cancel();
+                if (isLogin) {
+                    goHome();
+                } else {
+                    showDialog("Wrong username or password!");
                 }
-            } else {
-                Log.d("soa_getData", "Error!");
+            } catch (Exception e) {
+                showDialog("Oops! We can not connect to server.");
             }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            httpClient.close();
+        } else {
+            showDialog("Enter valid username and password!");
         }
     }
 
