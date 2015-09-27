@@ -15,7 +15,7 @@ module.exports = function(app, passport) {
     app.post('/mobile/login', function(req, res, next) {
         passport.authenticate('local-login', function(err, user, info) {
             if (err) {
-                return res.send(401, 'Fail');
+                return res.send(404, 'Error');
             }
             if (!user) {
                 return res.send(401, 'Fail');
@@ -28,12 +28,6 @@ module.exports = function(app, passport) {
             });
         })(req, res, next);
     });
-
-    // app.post('/mobile/login', passport.authenticate('local-login', {
-    // 	failureFlash : false
-    // }), function(req, res) {
-    // 	res.send(200, 'Authorized');
-    // });
 
     app.post('/admin', passport.authenticate('admin-login', {
         failureFlash: true
@@ -53,6 +47,20 @@ module.exports = function(app, passport) {
         failureRedirect: '/signup',
         failureFlash: true
     }));
+
+    app.post('/mobile/signup', function(req, res, next) {
+        passport.authenticate('local-signup', function(err, user) {
+            if (err) {
+                return res.send(404, 'Error');
+            }
+            if (user) {
+            	return res.send(200, 'OK');
+            } else {
+                return res.send(401, 'Username is already taken');
+            }
+
+        })(req, res, next);
+    });
 
     // logout
     app.get('/logout', function(req, res, next) {
