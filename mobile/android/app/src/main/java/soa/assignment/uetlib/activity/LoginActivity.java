@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -29,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
         usernameInput = (EditText) findViewById(R.id.input_username);
         passwordInput = (EditText) findViewById(R.id.input_password);
+//        getUserInfo();
 
         loginButton = (Button) findViewById(R.id.btn_login);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                 boolean isOK = new LoginTask(username, password).execute(url).get();
                 progressDialog.cancel();
                 if (isOK) {
+//                    saveUserInfo(username, password);
                     goHome();
                 } else {
                     showDialog("Wrong username or password!");
@@ -103,6 +106,22 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             showDialog("Enter valid username and password!");
         }
+    }
+
+    private void saveUserInfo(String username, String password) {
+        SharedPreferences settings = getSharedPreferences("UETLib", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("username", username);
+        editor.putString("password", password);
+        editor.commit();
+    }
+
+    private void getUserInfo() {
+        SharedPreferences settings = getSharedPreferences("UETLib", 0);
+        String username = settings.getString("username", "");
+        String password = settings.getString("password", "");
+        usernameInput.setText(username);
+        passwordInput.setText(password);
     }
 
     @Override
