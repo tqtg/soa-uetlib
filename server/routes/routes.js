@@ -10,6 +10,12 @@ module.exports = function(app, passport) {
 		failureFlash : true
 	}));
 
+	app.post('/mobile/login', passport.authenticate('local-login', {
+		failureFlash : true
+	}), function(req, res) {
+		res.send(200, 'Authorized');
+	});
+
 	app.post('/admin', passport.authenticate('admin-login', {
 		failureFlash : true
 	}), function(req, res) {

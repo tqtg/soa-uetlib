@@ -112,6 +112,8 @@ public class SearchActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.search) {
             search();
+        } else if (id == android.R.id.home) {
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
