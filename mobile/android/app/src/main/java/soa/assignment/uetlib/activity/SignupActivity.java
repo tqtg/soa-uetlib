@@ -4,14 +4,23 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.http.AndroidHttpClient;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPost;
+
+import java.io.IOException;
 
 import soa.assignment.uetlib.R;
 
@@ -20,6 +29,8 @@ public class SignupActivity extends AppCompatActivity {
     private EditText passwordInput;
     private Button createAccount;
     private TextView login;
+
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,24 +91,8 @@ public class SignupActivity extends AppCompatActivity {
             String username = usernameInput.getText().toString();
             String password = passwordInput.getText().toString();
 
-            final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                    R.style.Theme_AppCompat_Dialog);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Signing up...");
-            progressDialog.show();
-
             String url = "http://128.199.89.183:3000/mobile/signup";
-            try {
-                boolean isOK = new SignupTask(username, password).execute(url).get();
-                progressDialog.cancel();
-                if (isOK) {
-                    goHome();
-                } else {
-                    showDialog("That username is already taken!");
-                }
-            } catch (Exception e) {
-                showDialog("Oops! We can not connect to server.");
-            }
+            new SignupTask(username, password).execute(url);
         } else {
             showDialog("Enter valid username and password!");
         }
@@ -123,5 +118,68 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showLoadingDialog() {
+        pDialog = ProgressDialog.show(this, "", "Signing up...");
+    }
+
+    private void hideLoadingDialog() {
+        pDialog.cancel();
+    }
+
+    class SignupTask extends AsyncTask<String, String, Boolean> {
+        private String username;
+        private String password;
+
+        public SignupTask(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        protected Boolean doInBackground(String... urls) {
+            String url = urls[0] + "?username=" + username + "&password=" + password;
+            AndroidHttpClient httpClient = AndroidHttpClient.newInstance("SOA");
+            HttpPost httpPost = new HttpPost(url);
+
+            Log.d("soa_signup", "signing up...");
+
+            try {
+                HttpResponse response = httpClient.execute(httpPost);
+                Log.d("soa_signup", response.getStatusLine().getReasonPhrase());
+                if (response.getStatusLine().getStatusCode() == 200)
+                    return true;
+            } catch (ClientProtocolException e) {
+                // Log exception
+                e.printStackTrace();
+            } catch (IOException e) {
+                // Log exception
+                e.printStackTrace();
+            }
+
+            Log.d("soa_signup", "Error!");
+            return false;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showLoadingDialog();
+        }
+
+        protected void onProgressUpdate(String... progress) {
+            super.onProgressUpdate();
+        }
+
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            hideLoadingDialog();
+
+            if (result) {
+                goHome();
+            } else {
+                showDialog("That username is already taken!");
+            }
+        }
     }
 }

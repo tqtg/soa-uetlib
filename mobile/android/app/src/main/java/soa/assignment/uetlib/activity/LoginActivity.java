@@ -5,14 +5,23 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.http.AndroidHttpClient;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPost;
+
+import java.io.IOException;
 
 import soa.assignment.uetlib.R;
 
@@ -22,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextView signup;
 
+    private ProgressDialog pDialog;
+    public static final int LOADING_DIALOG = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void showDialog(String message) {
+    private void showAlertDialog(String message) {
         new AlertDialog.Builder(this)
                 .setMessage(message)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -84,27 +95,10 @@ public class LoginActivity extends AppCompatActivity {
             String username = usernameInput.getText().toString();
             String password = passwordInput.getText().toString();
 
-            final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                    R.style.Theme_AppCompat_Dialog);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Authenticating...");
-            progressDialog.show();
-
             String url = "http://128.199.89.183:3000/mobile/login";
-            try {
-                boolean isOK = new LoginTask(username, password).execute(url).get();
-                progressDialog.cancel();
-                if (isOK) {
-//                    saveUserInfo(username, password);
-                    goHome();
-                } else {
-                    showDialog("Wrong username or password!");
-                }
-            } catch (Exception e) {
-                showDialog("Oops! We can not connect to server.");
-            }
+            new LoginTask(username, password).execute(url);
         } else {
-            showDialog("Enter valid username and password!");
+            showAlertDialog("Enter valid username and password!");
         }
     }
 
@@ -144,5 +138,69 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showLoadingDialog() {
+        pDialog = ProgressDialog.show(this, "", "Authenticating...");
+    }
+
+    private void hideLoadingDialog() {
+        pDialog.cancel();
+    }
+
+    class LoginTask extends AsyncTask<String, String, Boolean> {
+        private String username;
+        private String password;
+
+        public LoginTask(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        protected Boolean doInBackground(String... urls) {
+            String url = urls[0] + "?username=" + username + "&password=" + password;
+            AndroidHttpClient httpClient = AndroidHttpClient.newInstance("SOA");
+            HttpPost httpPost = new HttpPost(url);
+
+            Log.d("soa_login", "authenticating...");
+
+            try {
+                HttpResponse response = httpClient.execute(httpPost);
+                Log.d("soa_login", String.valueOf(response.getStatusLine().getStatusCode()));
+                if (response.getStatusLine().getStatusCode() == 200)
+                    return true;
+            } catch (ClientProtocolException e) {
+                // Log exception
+                e.printStackTrace();
+            } catch (IOException e) {
+                // Log exception
+                e.printStackTrace();
+            }
+
+            Log.d("soa_login", "Error!");
+            return false;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showLoadingDialog();
+        }
+
+        protected void onProgressUpdate(String... progress) {
+            super.onProgressUpdate();
+        }
+
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            hideLoadingDialog();
+
+            if (result) {
+//                    saveUserInfo(username, password);
+                goHome();
+            } else {
+                showAlertDialog("Wrong username or password!");
+            }
+        }
     }
 }
