@@ -4,8 +4,6 @@ import android.graphics.drawable.Drawable;
 
 import org.json.JSONObject;
 
-import soa.assignment.uetlib.activity.GetImageTask;
-
 /**
  * Created by TuanTQ on 9/23/15.
  */
@@ -35,9 +33,6 @@ public class Book {
             this.page = book.getInt("page");
             this.publisher = book.getString("publisher");
             this.date = book.getString("date");
-
-            String imageLink = book.getString("image");
-            this.image = new GetImageTask().execute(imageLink).get();
         } catch (Exception e) {
             e.printStackTrace();
         }

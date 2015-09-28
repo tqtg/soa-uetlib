@@ -1,7 +1,5 @@
 package soa.assignment.uetlib.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +15,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -33,10 +29,10 @@ public class SearchActivity extends AppCompatActivity {
     private EditText search;
 
     public static List<Book> bookItemList;
-    private BookArrayAdapter bookArrayAdapter;
-    private int page;
+    public static BookArrayAdapter bookArrayAdapter;
+    public static int page;
     private String query;
-    private boolean loadAll;
+    public static boolean loadAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,40 +134,7 @@ public class SearchActivity extends AppCompatActivity {
 
     public void getBooks() {
         String url = "http://128.199.89.183:3000/books/search/" + query + "/" + String.valueOf(page);
-        int nBook = bookItemList.size();
-
-        try {
-            String data = new GetJSONDataTask(this).execute(url).get();
-            JSONArray bookArray = new JSONArray(data);
-
-            if (bookArray.length() == 0) {
-
-            }
-
-            for (int i = 0; i < bookArray.length(); i++) {
-                Book book = new Book(bookArray.getJSONObject(i));
-                bookItemList.add(book);
-            }
-        } catch (Exception e) {
-//            e.printStackTrace();
-        }
-
-        if (bookItemList.size() == 0) {
-            new AlertDialog.Builder(this)
-                    .setMessage("Nothing found!")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // continue with delete
-                            dialog.cancel();
-                        }
-                    })
-                    .show();
-        } else if (nBook == bookItemList.size() || nBook < 20) {
-            loadAll = true;
-        } else {
-            page++;
-            bookArrayAdapter.notifyDataSetChanged();
-        }
+        new GetBookTask(this, 3).execute(url);
     }
 
     public void viewBook(int i) {

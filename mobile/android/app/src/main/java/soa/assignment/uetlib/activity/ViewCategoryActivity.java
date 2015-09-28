@@ -10,8 +10,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class ViewCategoryActivity extends AppCompatActivity {
     private ListView listView;
 
     public static List<Book> bookItemList;
-    private BookArrayAdapter bookArrayAdapter;
+    public static BookArrayAdapter bookArrayAdapter;
     private int page;
     private String id;
     private String name;
@@ -103,17 +101,18 @@ public class ViewCategoryActivity extends AppCompatActivity {
 
     public void getBooks() {
         String url = "http://128.199.89.183:3000/books/category/" + id + "/" + String.valueOf(page);
+        new GetBookTask(this, 2).execute(url);
 
-        try {
-            String data = new GetJSONDataTask(this).execute(url).get();
-            JSONArray bookArray = new JSONArray(data);
-            for (int i = 0; i < bookArray.length(); i++) {
-                Book book = new Book(bookArray.getJSONObject(i));
-                bookItemList.add(book);
-            }
-        } catch (Exception e) {
-//            e.printStackTrace();
-        }
+//        try {
+//            String data = new GetBookTask(this).execute(url).get();
+//            JSONArray bookArray = new JSONArray(data);
+//            for (int i = 0; i < bookArray.length(); i++) {
+//                Book book = new Book(bookArray.getJSONObject(i));
+//                bookItemList.add(book);
+//            }
+//        } catch (Exception e) {
+////            e.printStackTrace();
+//        }
 
         page++;
         bookArrayAdapter.notifyDataSetChanged();

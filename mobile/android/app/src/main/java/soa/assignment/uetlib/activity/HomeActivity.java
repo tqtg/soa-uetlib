@@ -12,8 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,17 +99,18 @@ public class HomeActivity extends AppCompatActivity {
 
     public void getBooks() {
         String url = "http://128.199.89.183:3000/books/page/" + String.valueOf(page);
+        new GetBookTask(this, 1).execute(url);
 
-        try {
-            String data = new GetJSONDataTask(this).execute(url).get();
-            JSONArray bookArray = new JSONArray(data);
-            for (int i = 0; i < bookArray.length(); i++) {
-                Book book = new Book(bookArray.getJSONObject(i));
-                bookItemList.add(book);
-            }
-        } catch (Exception e) {
-//            e.printStackTrace();
-        }
+//        try {
+//            String data = new GetBookTask(this).execute(url).get();
+//            JSONArray bookArray = new JSONArray(data);
+//            for (int i = 0; i < bookArray.length(); i++) {
+//                Book book = new Book(bookArray.getJSONObject(i));
+//                bookItemList.add(book);
+//            }
+//        } catch (Exception e) {
+////            e.printStackTrace();
+//        }
 
         page++;
     }
@@ -119,16 +118,16 @@ public class HomeActivity extends AppCompatActivity {
     public void getCategories() {
         String url = "http://128.199.89.183:3000/categories";
 
-        try {
-            String data = new GetJSONDataTask(this).execute(url).get();
-            JSONArray categoryArray = new JSONArray(data);
-            for (int i = 0; i < categoryArray.length(); i++) {
-                Category category = new Category(categoryArray.getJSONObject(i));
-                categoryItemList.add(category);
-            }
-        } catch (Exception e) {
-//            e.printStackTrace();
-        }
+//        try {
+//            String data = new GetBookTask(this).execute(url).get();
+//            JSONArray categoryArray = new JSONArray(data);
+//            for (int i = 0; i < categoryArray.length(); i++) {
+//                Category category = new Category(categoryArray.getJSONObject(i));
+//                categoryItemList.add(category);
+//            }
+//        } catch (Exception e) {
+////            e.printStackTrace();
+//        }
 
     }
 

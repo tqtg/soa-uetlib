@@ -16,7 +16,7 @@ import soa.assignment.uetlib.adapter.BookArrayAdapter;
  * Created by TuanTQ on 9/26/15.
  */
 public class AllBookFragment extends android.support.v4.app.Fragment {
-    private BookArrayAdapter bookArrayAdapter;
+    public static BookArrayAdapter bookArrayAdapter;
     private ListView listView;
 
     @Override
