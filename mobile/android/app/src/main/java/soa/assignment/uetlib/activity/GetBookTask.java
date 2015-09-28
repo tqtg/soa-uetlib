@@ -120,16 +120,23 @@ public class GetBookTask extends AsyncTask<String, String, String> {
                     AllBookFragment.bookArrayAdapter.notifyDataSetChanged();
                     break;
                 case INVOKER_CATEGORY:
-                    ViewCategoryActivity.bookItemList.addAll(bookItemList);
-                    ViewCategoryActivity.bookArrayAdapter.notifyDataSetChanged();
+                    if (bookItemList.size() > 0) {
+                        ViewCategoryActivity.bookItemList.addAll(bookItemList);
+                        ViewCategoryActivity.bookArrayAdapter.notifyDataSetChanged();
+                        if (bookItemList.size() < 20) ViewCategoryActivity.loadAll = true;
+                        else ViewCategoryActivity.page++;
+                    } else {
+                        ViewCategoryActivity.loadAll = true;
+                    }
                     break;
                 case INVOKER_SEARCH:
                     if (bookItemList.size() > 0) {
                         SearchActivity.bookItemList.addAll(bookItemList);
                         SearchActivity.bookArrayAdapter.notifyDataSetChanged();
-                        SearchActivity.page++;
                         if (bookItemList.size() < 20) SearchActivity.loadAll = true;
+                        else SearchActivity.page++;
                     } else {
+                        SearchActivity.loadAll = true;
                         new AlertDialog.Builder(context)
                                 .setMessage("Nothing found!")
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

@@ -116,8 +116,9 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void search() {
+        page = 1;
+        loadAll = false;
         bookItemList.clear();
-        bookArrayAdapter.clear();
         bookArrayAdapter.notifyDataSetChanged();
 
         InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);

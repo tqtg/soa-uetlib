@@ -22,15 +22,18 @@ public class ViewCategoryActivity extends AppCompatActivity {
 
     public static List<Book> bookItemList;
     public static BookArrayAdapter bookArrayAdapter;
-    private int page;
+    public static int page;
+    public static boolean loadAll;
     private String id;
     private String name;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_category);
 
+        loadAll = false;
         bookItemList = new ArrayList<>();
 
         id = getIntent().getExtras().getString("id");
@@ -58,7 +61,7 @@ public class ViewCategoryActivity extends AppCompatActivity {
                 int threshold = 1;
                 int count = listView.getCount();
 
-                if (scrollState == SCROLL_STATE_IDLE) {
+                if (scrollState == SCROLL_STATE_IDLE && !loadAll) {
                     if (listView.getLastVisiblePosition() >= count - threshold) {
                         // Execute LoadMoreDataTask AsyncTask
                         getBooks();
@@ -100,22 +103,9 @@ public class ViewCategoryActivity extends AppCompatActivity {
     }
 
     public void getBooks() {
+        loadAll = false;
         String url = "http://128.199.89.183:3000/books/category/" + id + "/" + String.valueOf(page);
         new GetBookTask(this, 2).execute(url);
-
-//        try {
-//            String data = new GetBookTask(this).execute(url).get();
-//            JSONArray bookArray = new JSONArray(data);
-//            for (int i = 0; i < bookArray.length(); i++) {
-//                Book book = new Book(bookArray.getJSONObject(i));
-//                bookItemList.add(book);
-//            }
-//        } catch (Exception e) {
-////            e.printStackTrace();
-//        }
-
-        page++;
-        bookArrayAdapter.notifyDataSetChanged();
     }
 
     public void viewBook(int i) {

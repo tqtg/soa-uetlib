@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-//        categoryItemList = new ArrayList<>();
+        categoryItemList = new ArrayList<>();
         bookItemList = new ArrayList<>();
 
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -75,7 +75,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-//        getCategories();
+        getCategories();
         page = 7;
         getBooks();
     }
@@ -129,6 +129,23 @@ public class HomeActivity extends AppCompatActivity {
 ////            e.printStackTrace();
 //        }
 
+
+        categoryItemList.add(new Category("c320", "Sách Tiếng Anh"));
+        categoryItemList.add(new Category("c839", "Sách Văn Học - Tiểu Thuyết"));
+        categoryItemList.add(new Category("c846", "Sách Kinh Tế"));
+        categoryItemList.add(new Category("c873", "Sách Chuyên Ngành"));
+        categoryItemList.add(new Category("c870", "Sách Kỹ Năng Sống - Nghệ Thuật Sống"));
+        categoryItemList.add(new Category("c1012", "Sách Giáo Khoa - Tham Khảo"));
+        categoryItemList.add(new Category("c887", "Sách Học Ngoại Ngữ - Từ Điển"));
+        categoryItemList.add(new Category("c714", "Sách Cho Tuổi Mới Lớn"));
+        categoryItemList.add(new Category("c393", "Sách Truyện Thiếu Nhi"));
+        categoryItemList.add(new Category("c862", "Sách Thường Thức - Đời Sống"));
+        categoryItemList.add(new Category("c1084", "Truyện Tranh, Manga, Comic"));
+        categoryItemList.add(new Category("c857", "Sách Văn Hoá - Nghệ Thuật - Du Lịch"));
+        categoryItemList.add(new Category("c1468", "Tạp Chí"));
+        categoryItemList.add(new Category("c2527", "Sách Nuôi Dạy Con"));
+        categoryItemList.add(new Category("c3447", "Sách Cũ Giá Tốt"));
+        categoryItemList.add(new Category("c3550", "Combo - Series Sách Đặc Sắc"));
     }
 
     public void viewBook(int i) {

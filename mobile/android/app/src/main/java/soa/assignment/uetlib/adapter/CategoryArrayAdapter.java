@@ -49,15 +49,15 @@ public class CategoryArrayAdapter extends ArrayAdapter<Category> {
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         View row = convertView;
         TextView categoryName;
-        final Category category = getItem(position);
 
         if (row == null) {
             LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.category_item_row, parent, false);
-            categoryName = (TextView) row.findViewById(R.id.categoryName);
-            categoryName.setText(category.getName());
-            row.setTag(category.getId());
         }
+
+        Category category = getItem(position);
+        categoryName = (TextView) row.findViewById(R.id.categoryName);
+        categoryName.setText(category.getName());
 
         return row;
     }
