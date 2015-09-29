@@ -10,10 +10,8 @@ public class EditBookFrame extends JFrame {
 	public BookPanel panel;
 	public String id;
 	public JSONObject book;
-	public boolean responseCode;
 
 	public EditBookFrame(JSONObject edittingBook) {
-		this.responseCode = false;
 		this.id = (String) edittingBook.get("_id");
 		this.book = edittingBook;
 
