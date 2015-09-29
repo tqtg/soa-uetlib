@@ -2,6 +2,7 @@ package phong.nt.qltv;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.SystemColor;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -37,13 +38,12 @@ public class MoreInfoFrame extends JFrame {
 
 		String imageLink = (String) book.get("image");
 		BufferedImage img = ImageIO.read(new URL(imageLink));
+		img.getScaledInstance(200, 280, Image.SCALE_DEFAULT);
 		ImageIcon icon = new ImageIcon(img);
 		JLabel imageLabel = new JLabel(icon);
 		imageLabel.setBackground(Color.WHITE);
 		imageLabel.setForeground(Color.BLACK);
-		imageLabel.setBounds(12, 13, 263, 354);
-		if (img == null)
-			imageLabel.setText("image");
+		imageLabel.setBounds(70, 55, 200, 280);
 		contentPane.add(imageLabel);
 
 		JTextArea titleLabel = new JTextArea("title");
@@ -53,7 +53,7 @@ public class MoreInfoFrame extends JFrame {
 		titleLabel.setBackground(SystemColor.menu);
 		titleLabel.setEditable(false);
 		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
-		titleLabel.setBounds(377, 32, 325, 55);
+		titleLabel.setBounds(377, 30, 325, 57);
 		contentPane.add(titleLabel);
 
 		JTextArea authorLabel = new JTextArea("author");
