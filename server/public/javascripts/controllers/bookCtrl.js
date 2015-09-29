@@ -3,6 +3,11 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 	$scope.books = [];
 	$scope.isEditable = [];
 	$scope.userInfo = '';
+	$scope.searchQuery = '';
+	$scope.currentCategory = '';
+	$searchMode = false;
+	$scope.currentPage = 1;
+	$scope.pageLength = 108; //Number of page for all books, hand fixed the the sake of server performance
 
   $scope.clickToOpen = function (book) {
   		var cateId = book.category;
@@ -47,57 +52,65 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 		  });						
   };
    // -----------------------------------------------
-	// get categories
-	soaFactory.getCategories().then(function(data) {
-		$scope.categories = data.data;
-	})
-
-	// get first 20 books of page 1 without category
-	soaFactory.getByPage(1).then(function(data) {
-		$scope.books = data.data;
-	})
-
-	$scope.getBooksBySearch = function(query) {
-		// console.log(query);
-		soaFactory.getBySearch(query).then(function(data) {
-			$scope.books = data.data;
-		})
-	}
-
-	$scope.getBookByCategory = function(category, page) {
-		soaFactory.getByCategory(category, page).then(function(data) {
-			$scope.books = data.data;
-		})
-	}
-
-	$scope.getUserInformation = function() {
+   $scope.getUserInformation = function() {
 		soaFactory.getUserInfo().then(function(data) {
 			$scope.userInfo = data.data;
 		})
 	}
 
-	$scope.nextPage = function(){
+	// get categories
+	soaFactory.getCategories().then(function(data) {
+		$scope.categories = data.data;
+		$scope.getUserInformation();
+	})
+
+	// get first 16 books of page 1 without category
+	soaFactory.getByPage(1).then(function(data) {
+		$scope.books = data.data;
+	})
+
+	$scope.changePageBySearch = function(page){
+		if($scope.searchMode == true){
+			soaFactory.getBySearch($scope.searchQuery, page).then(function(data) {
+				$scope.books = data.data;
+			})
+		}
 	}
 
-	$scope.backPage = function(){
+	$scope.getBooksBySearch = function(query) {
+		$scope.currentPage=1; 
+		$scope.searchMode = true;
+		$scope.searchQuery = query;
+		soaFactory.getSearchResultLength(query).then(function(data) {
+			$scope.pageLength = Math.floor(data.data/16);
+		})
+		$scope.changePageBySearch(1);
+		// console.log($scope.pageLength);
 	}
-	   $scope.filteredTodos = []
-  ,$scope.currentPage = 1
-  ,$scope.numPerPage = 10
-  ,$scope.maxSize = 5;
-  
-  $scope.makeTodos = function() {
-    $scope.todos = [];
-    for (i=1;i<=1000;i++) {
-      $scope.todos.push({ text:'todo '+i, done:false});
-    }
-  };
-  $scope.makeTodos(); 
-  
-  $scope.$watch('currentPage + numPerPage', function() {
-    var begin = (($scope.currentPage - 1) * $scope.numPerPage)
-    , end = begin + $scope.numPerPage;
-    
-    $scope.filteredTodos = $scope.todos.slice(begin, end);
-  });
+
+	$scope.changePageByCategory = function(page){
+		if($scope.searchMode == false){
+			soaFactory.getByCategory($scope.currentCategory, page).then(function(data) {
+				$scope.books = data.data;
+			})
+		}
+	}
+
+	$scope.getBookByCategory = function(category) {
+		$scope.currentPage=1; 
+		$scope.currentCategory = category;
+		$scope.searchMode=false;
+		soaFactory.getCategoryLength(category).then(function(data) {
+			$scope.pageLength = Math.floor(data.data/16);
+			// console.log($scope.pageLength);
+		})
+		$scope.changePageByCategory(1);
+	}
+
+	// MAY BE SLOW DOWN SERVER
+	$scope.getAllBooksLength = function() {
+		soaFactory.getAllBooksLength().then(function(data) {
+			$scope.pageLength = Math.floor(data.data/16);
+		})
+	}
 });

@@ -10,6 +10,18 @@ app.factory('soaFactory', function($http) {
 		return $http.get(urlBase + '/all');
 	}
 
+	services.getAllBooksLength = function() {
+		return $http.get(urlBase + '/all/length');
+	}
+
+	services.getCategoryLength = function(category) {
+		return $http.get(urlBase + '/category/'+category+'/length');
+	}
+
+	services.getSearchResultLength = function(query) {
+		return $http.get(urlBase + '/search/'+query+'/length');
+	}
+
 	services.getByCategory = function(category, page) {
 		return $http.get(urlBase + '/category/' + category + '/' + page);
 	}
@@ -27,8 +39,8 @@ app.factory('soaFactory', function($http) {
 		return $http.get('/categories');
 	}
 	
-	services.getBySearch = function(query) {
-		return $http.get(urlBase + '/search/' + query);
+	services.getBySearch = function(query, page) {
+		return $http.get(urlBase + '/search/' + query + '/page/' + page);
 	}
 
 	services.getUserInfo = function() {

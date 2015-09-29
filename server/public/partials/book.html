@@ -17,14 +17,12 @@
                                     </ul>
                                     <div class="clear"></div>
                                 </div>
-                                <!-- <i class="fa fa-angle-down"></i> -->
                                 <div class="cart-position">
                                     <div class="cart-inner">
                                         <div class="heading">
                                             <span class="link_a">
                                                 <div class="dropdown">
-                                                    <i class="fa fa-user fa-lg"></i>
-                                                    <div ng-if="userInfo==''">{{getUserInformation()}}</div>
+                                                    <i class="fa fa-user fa-lg"></i>   
                                                     WELCOME
                                                     <b>{{userInfo | uppercase}}</b>
                                                     <a class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -53,9 +51,9 @@
                                 </div>
                                 <div id="search">
                                     <div class="inner">
-                                        <input ng-model="query" type="text" ng-keyup="$event.keyCode == 13 && getBooksBySearch(query)">
+                                        <input ng-model="searchQuery" type="text" ng-keyup="$event.keyCode == 13 && getBooksBySearch(searchQuery)">
                                         <div class="button-search">
-                                            <i ng-click="getBooksBySearch(query)" class="fa fa-search"></i>
+                                            <i ng-click="getBooksBySearch(searchQuery)" class="fa fa-search"></i>
                                             <span>Search</span>
                                         </div>
                                     </div>
@@ -76,7 +74,7 @@
                                     <h4 class="list-group-item-heading" style="padding-top:3px;">Category</h4>
                                 </a>
                                 <li class="list-group-item" ng-repeat="category in categories">
-                                    <a ng-click="getBookByCategory(category.id,1)" style="color: #666666; font-family: Candara,sans-serif; font-size: 14px; font-weight:;">{{category.name}}</a>
+                                    <a ng-click="getBookByCategory(category.id);getCategoryLength(category.id);" style="color: #666666; font-family: Candara,sans-serif; font-size: 14px; font-weight:;">{{category.name}}</a>
                                 </li>
                             </div>
                         </div> <!-- END OF CATEGORY DIV -->
@@ -92,7 +90,7 @@
                                             <div>
                                                 <div class="image2">
                                                     <a title="Leras nuyas" ng-click="clickToOpen()"><img id="img_33" src="{{book.image}}"></a>
-                                                     <a ng-click="clickToOpen(book)" rel="colorbox" class="colorbox3 quick-view-button cboxElement"><i class=" fa fa-search-plus "></i></a> <!--FOR MAGNIFYING GLASS-->
+                                                     <a ng-click="clickToOpen(book)" rel="colorbox" class="colorbox3 quick-view-button cboxElement"><i class=" fa fa-search-plus " style="padding-top:5px;"></i></a> <!--FOR MAGNIFYING GLASS-->
                                                 </div>
                                                 <div class="inner"> <!-- FOR NAME AND DESCRIPTION -->
                                                     <div class="f-left maxheight-feat" style="height: 86px;">
@@ -109,13 +107,15 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <nav class="col-md-offset-4"> -->
-                        <nav class="scol-md-offset-4">
-                            <ul class="pager">
-                                <li class="disabled"><a href="#"><span aria-hidden="true">&larr;</span> Back Page</a></li>
-                                <li class=""><a href="#">Next Page <span aria-hidden="true">&rarr;</span></a></li>
-                            </ul>
-                        </nav>
+                        <div class="col-md-offset-4">
+                            <pagination 
+                              ng-model="currentPage"
+                              ng-change = "changePageBySearch(currentPage); changePageByCategory(currentPage);"
+                              total-items="pageLength*10"
+                              max-size="4"  
+                              boundary-links="true">
+                            </pagination>
+                        </div>
                     </div>
                 </div>
                 <div class"clear"></div>

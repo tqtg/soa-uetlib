@@ -18,10 +18,29 @@ module.exports = function(app, mongoose, passport) {
 		})
 	});
 
+	/* GET length of all books */
+	app.get('/books/all/length', isLoggedIn, function(req, res, next) {
+		Book.find(function(err, books) {
+			if (err) return next(err);
+			res.json(books.length);
+			// res.json(books);
+		})
+	});
+
+	/* GET length of a category */
+	app.get('/books/category/:category/length', isLoggedIn, function(req, res, next) {
+		Book.find({
+			'category' : req.params.category
+		}, function(err, post) {
+			if (err) return next(err);
+			res.json(post.length);
+		})
+	});
+
 	/* GET books listing. Limit 50 */
 	app.get('/books', isLoggedIn, function(req, res, next) {
 		Book.find({}, {}, {
-			limit : 20
+			limit : 16
 		}, function(err, books) {
 			if (err) return next(err);
 			res.json(books);
@@ -40,7 +59,7 @@ module.exports = function(app, mongoose, passport) {
 	app.get('/books/page/:page', isLoggedIn, function(req, res, next) {
 		Book.find({}, {}, {
 			skip : (req.params.page - 1) * 20,
-			limit : 20
+			limit : 16
 		}, function(err, books) {
 			if (err) return next(err);
 			res.json(books);
@@ -63,7 +82,7 @@ module.exports = function(app, mongoose, passport) {
 			'category' : req.params.category
 		}, {}, {
 			skip : (req.params.page - 1) * 20,
-			limit : 20
+			limit : 16
 		}, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
@@ -97,7 +116,7 @@ module.exports = function(app, mongoose, passport) {
 	* Searching
 	* GET /books/search/:query
 	*/
-	app.get('/books/search/:query/:page', isLoggedIn, function(req, res, next) {
+	app.get('/books/search/:query/page/:page', isLoggedIn, function(req, res, next) {
 		Book.find({
 			'$or' : [{
 				"title": {
@@ -111,14 +130,36 @@ module.exports = function(app, mongoose, passport) {
 				}
 			}]
 		}, {}, {
-			skip : (req.params.page - 1) * 20,
-			limit : 20
+			skip : (req.params.page - 1) * 16,
+			limit : 16
 		}, function(err, books) {
 			if (err) return next(err);
 			res.json(books);
 		})
 	});
 
+	/**
+	* Searching
+	* GET /books/search/query/length
+	*/
+	app.get('/books/search/:query/length', isLoggedIn, function(req, res, next) {
+		Book.find({
+			'$or' : [{
+				"title": {
+					'$regex' : '.*' + req.params.query + '.*',
+					'$options' : 'i'
+				}
+			}, {
+				"author": {
+					'$regex' : '.*' + req.params.query + '.*',
+					'$options' : 'i'
+				}
+			}]
+		}, function(err, books) {
+			if (err) return next(err);
+			res.json(books.length);
+		})
+	});
 
 	/* POST /books */
 	app.post('/books', isAdmin, function(req, res, next) {
