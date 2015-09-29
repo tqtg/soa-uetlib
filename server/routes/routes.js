@@ -70,7 +70,7 @@ module.exports = function(app, passport) {
 
     // use passport to control
     app.get('/', isLoggedIn, function(req, res, next) {
-        res.render('index.html');
+        res.sendfile('views/index.html');
     });
 
     app.get('/*', function(req, res, next) {
