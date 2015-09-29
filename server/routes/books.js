@@ -93,6 +93,32 @@ module.exports = function(app, mongoose, passport) {
 		})
 	});
 
+		/**
+	* Searching
+	* GET /books/search/:query
+	*/
+	app.get('/books/search/:query/:page', function(req, res, next) {
+		Book.find({
+			'$or' : [{
+				"title": {
+					'$regex' : '.*' + req.params.query + '.*',
+					'$options' : 'i'
+				}
+			}, {
+				"author": {
+					'$regex' : '.*' + req.params.query + '.*',
+					'$options' : 'i'
+				}
+			}]
+		}, {}, {
+			skip : (req.params.page - 1) * 20,
+			limit : 20
+		}, function(err, books) {
+			if (err) return next(err);
+			res.json(books);
+		})
+	});
+
 
 	/* POST /books */
 	app.post('/books', function(req, res, next) {

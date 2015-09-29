@@ -55,7 +55,7 @@ public class AddNewBookFrame extends JFrame implements ActionListener {
 			try {
 				int response = Function.createBook(book);
 				if (response == 200) {
-					int result = JOptionPane.showConfirmDialog(this, "Success!", "Infomation",
+					int result = JOptionPane.showConfirmDialog(this, "Success!\nRefresh the table to see the lastest update!", "Infomation",
 							JOptionPane.CLOSED_OPTION);
 					if (result == 0) {
 						setVisible(false);
