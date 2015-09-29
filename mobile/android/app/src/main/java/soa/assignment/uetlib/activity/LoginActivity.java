@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,11 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-
-import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import soa.assignment.uetlib.R;
 
@@ -162,27 +158,29 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         protected Boolean doInBackground(String... urls) {
+            int responseCode = 0;
             String url = urls[0] + "?username=" + username + "&password=" + password;
-            AndroidHttpClient httpClient = AndroidHttpClient.newInstance("SOA");
-            HttpPost httpPost = new HttpPost(url);
 
             Log.d("soa_login", "authenticating...");
 
             try {
-                HttpResponse response = httpClient.execute(httpPost);
-                Log.d("soa_login", String.valueOf(response.getStatusLine().getStatusCode()));
-                if (response.getStatusLine().getStatusCode() == 200)
-                    return true;
-            } catch (ClientProtocolException e) {
-                // Log exception
-                e.printStackTrace();
-            } catch (IOException e) {
-                // Log exception
-                e.printStackTrace();
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                // add request header
+                con.setRequestMethod("POST");
+                con.setInstanceFollowRedirects(false);
+
+                responseCode = con.getResponseCode();
+                HomeActivity.cookie = con.getHeaderField("Set-Cookie");
+                con.disconnect();
+
+                Log.d("soa_login", "Response code: " + responseCode);
+            } catch (Exception e) {
+                Log.d("soa_login", "Error!");
             }
 
-            Log.d("soa_login", "Error!");
-            return false;
+            return (responseCode == 200);
         }
 
         @Override

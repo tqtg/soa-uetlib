@@ -8,23 +8,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +32,6 @@ import soa.assignment.uetlib.model.Book;
 public class GetBookTask extends AsyncTask<String, String, String> {
     private Context context;
     private int invoker;
-    private Book book;
     private ProgressDialog pDialog;
     public static final int INVOKER_HOME = 1;
     public static final int INVOKER_CATEGORY = 2;
@@ -50,41 +43,37 @@ public class GetBookTask extends AsyncTask<String, String, String> {
     }
 
     protected String doInBackground(String... urls) {
-        String result = "result";
+        String result = "[ ]";
         String url = urls[0];
-        HttpGet request = new HttpGet(url);
-        AndroidHttpClient httpClient = AndroidHttpClient.newInstance("SOA");
+
+        Log.d("soa_getData", "Loading...");
 
         try {
-            HttpResponse response = httpClient.execute(request);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK)
-            {
-                Log.d("soa_getData", "OK!");
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                HttpEntity entity = response.getEntity();
-                // If the response does not enclose an entity, there is no need
-                // to worry about connection release
+            // add request header
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Cookie", HomeActivity.cookie);
 
-                if (entity != null) {
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending GET request to URL: " + url);
+            System.out.println("Response Code: " + responseCode);
 
-                    // A Simple JSON Response Read
-                    InputStream instream = entity.getContent();
-                    result = convertStreamToString(instream);
-                    // now you have the string representation of the HTML request
-                    instream.close();
-                }
-            } else {
-                Log.d("soa_getData", "Error!");
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
             }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            httpClient.close();
-        }
+            in.close();
 
-//        Log.d("soa_getBooks", result);
+            result = response.toString();
+        } catch (Exception e) {
+            Log.d("soa_getData", "Error!");
+        }
 
         return result;
     }
@@ -102,14 +91,12 @@ public class GetBookTask extends AsyncTask<String, String, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
-        Log.d("soa_response", result);
-
         try {
             JSONArray bookArray = new JSONArray(result);
             List<Book> bookItemList = new ArrayList<>();
             for (int i = 0; i < bookArray.length(); i++) {
                 JSONObject bookObj = bookArray.getJSONObject(i);
-                book = new Book(bookObj);
+                Book book = new Book(bookObj);
                 new GetImageTask(book).execute(bookObj.getString("image"));
                 bookItemList.add(book);
             }
@@ -156,33 +143,6 @@ public class GetBookTask extends AsyncTask<String, String, String> {
         }
 
         pDialog.cancel();
-    }
-
-    private static String convertStreamToString(InputStream is) {
-    /*
-     * To convert the InputStream to String we use the BufferedReader.readLine()
-     * method. We iterate until the BufferedReader return null which means
-     * there's no more data to read. Each line will appended to a StringBuilder
-     * and returned as String.
-     */
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
     }
 
     class GetImageTask extends AsyncTask<String, Integer, Drawable> {

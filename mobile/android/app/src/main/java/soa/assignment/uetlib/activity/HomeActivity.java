@@ -1,7 +1,6 @@
 package soa.assignment.uetlib.activity;
 
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -27,8 +26,8 @@ public class HomeActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
     private static int page;
-    private ProgressDialog loadingDialog;
 
+    public static String cookie;
     public static List<Book> bookItemList;
     public static List<Category> categoryItemList;
 
