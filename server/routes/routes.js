@@ -78,9 +78,9 @@ module.exports = function(app, passport) {
         res.sendfile('views/index.html');
     });
 
-    // app.get('/*', function(req, res, next) {
-    //     res.redirect('/');
-    // });
+    app.get('/*', function(req, res, next) {
+        res.redirect('/');
+    });
 }
 
 // route middleware to make sure a user is logged in
