@@ -56,40 +56,39 @@ public class LogInFrame extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String user = userText.getText();
+		String username = userText.getText();
 		char[] password = passwordText.getPassword();
+		String pass = new String(password);
 
-		if (user.equals("") || password.length == 0) {
+		if (username.equals("") || password.length == 0) {
 			System.out.println("Error - Invalid username and password!");
 			JOptionPane.showMessageDialog(this, "Plese enter valid username and password!", "Error",
 					JOptionPane.ERROR_MESSAGE);
 		} else {
-			// send request to server
-			//
-			//
-
-			boolean response = true;
-
-			if (!response) {
-				System.out.println("Error - Wrong username or password!");
-				JOptionPane.showMessageDialog(this, "Wrong username or password!", "Error", JOptionPane.ERROR_MESSAGE);
-			}
-
-			if (response) {
-				System.out.println("Login succesfully!");
-				setVisible(false);
-				dispose();
-				// ManagerFrame manager = new ManagerFrame();
-				// manager.setVisible(true);
-				ViewBooksFrame frame;
-				try {
-					frame = new ViewBooksFrame();
-					frame.setVisible(true);
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+			boolean response;
+			try {
+				response = Function.login(username, pass);
+				if (!response) {
+					System.out.println("Error - Wrong username or password!");
+					JOptionPane.showMessageDialog(this, "Wrong username or password!", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+					System.out.println("Login succesfully!");
+					setVisible(false);
+					dispose();
+					ViewBooksFrame frame;
+					try {
+						frame = new ViewBooksFrame();
+						frame.setVisible(true);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				JOptionPane.showMessageDialog(this, e2.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
+
 		}
 	}
 }

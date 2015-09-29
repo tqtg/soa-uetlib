@@ -7,22 +7,18 @@ import javax.swing.table.AbstractTableModel;
 
 @SuppressWarnings("serial")
 public class BookTableModel extends AbstractTableModel {
-	public final static int ID = 0;
-	public final static int TITLE = 1;
-	public final static int AUTHOR = 2;
-	public final static int CATEGORY = 3;
-	public final static int PAGE = 4;
-	public final static int PUBLISHER = 5;
-	public final static int DATE = 6;
-	public final static int IMAGE = 7;
-	public final static int DESCRIPTION = 8;
-	public final static int MORE_INFO = 9;
-	public final static int EDIT = 10;
-	public final static int DELETE = 11;
+	public final static int TITLE = 0;
+	public final static int AUTHOR = 1;
+	public final static int CATEGORY = 2;
+	public final static int PAGE = 3;
+	public final static int PUBLISHER = 4;
+	public final static int DATE = 5;
+	public final static int MORE_INFO = 6;
+	public final static int EDIT = 7;
+	public final static int DELETE = 8;
 
 	private List<Book> bookList = new ArrayList<Book>();
-	private String[] columnNames = { "ID", "Title", "Author", "Category", "Page", "Publisher", "Date", "Image",
-			"Description", "", "", "" };
+	private String[] columnNames = { "Title", "Author", "Category", "Page", "Publisher", "Date", "", "", "" };
 
 	public BookTableModel() {
 
@@ -60,9 +56,9 @@ public class BookTableModel extends AbstractTableModel {
 			Object bookAttribute = null;
 			Book book = bookList.get(row);
 			switch (column) {
-			case ID:
-				bookAttribute = book.getId();
-				break;
+//			case ID:
+//				bookAttribute = book.getId();
+//				break;
 			case TITLE:
 				bookAttribute = book.getTitle();
 				break;
@@ -88,12 +84,12 @@ public class BookTableModel extends AbstractTableModel {
 			case DATE:
 				bookAttribute = book.getDate();
 				break;
-			case IMAGE:
-				bookAttribute = book.getImage();
-				break;
-			case DESCRIPTION:
-				bookAttribute = book.getDescription();
-				break;
+//			case IMAGE:
+//				bookAttribute = book.getImage();
+//				break;
+//			case DESCRIPTION:
+//				bookAttribute = book.getDescription();
+//				break;
 			}
 			return bookAttribute;
 		}

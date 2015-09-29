@@ -1,9 +1,14 @@
 package phong.nt.qltv;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -33,9 +39,10 @@ public class ViewBooksFrame extends JFrame {
 	private BookTableModel model;
 
 	public ViewBooksFrame() throws Exception {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Library Manager");
-		setSize(800, 800);
+//		setSize(1400, 1400);
+		setMinimumSize(new Dimension(1400, 1000));
 		getContentPane().setLayout(new BorderLayout());
 
 		menuBar = new JMenuBar();
@@ -64,6 +71,7 @@ public class ViewBooksFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Function.cookie = new String();
 				LogInFrame frame = new LogInFrame();
 				frame.setVisible(true);
 				setVisible(false);
@@ -86,13 +94,44 @@ public class ViewBooksFrame extends JFrame {
 
 		model = new BookTableModel(bookList);
 		table = new JTable(model);
+		table.setPreferredScrollableViewportSize(table.getPreferredSize());
+		table.setRowHeight(40);
+		table.getColumnModel().getColumn(BookTableModel.TITLE).setMinWidth(400);
+		table.getColumnModel().getColumn(BookTableModel.MORE_INFO).setMinWidth(100);
+		table.getColumnModel().getColumn(BookTableModel.MORE_INFO).setMaxWidth(100);
+		table.getColumnModel().getColumn(BookTableModel.EDIT).setMinWidth(100);
+		table.getColumnModel().getColumn(BookTableModel.EDIT).setMaxWidth(100);
+		table.getColumnModel().getColumn(BookTableModel.DELETE).setMinWidth(100);
+		table.getColumnModel().getColumn(BookTableModel.DELETE).setMaxWidth(100);
+		table.getColumnModel().getColumn(BookTableModel.DATE).setMinWidth(80);
+		table.getColumnModel().getColumn(BookTableModel.DATE).setMaxWidth(80);
+		table.getColumnModel().getColumn(BookTableModel.PAGE).setMinWidth(50);
+		table.getColumnModel().getColumn(BookTableModel.PAGE).setMaxWidth(50);
+		
+		DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
+		    Font font = new Font("Tahoma", Font.BOLD, 15);
+
+		    @Override
+		    public Component getTableCellRendererComponent(JTable table,
+		            Object value, boolean isSelected, boolean hasFocus,
+		            int row, int column) {
+		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+		                row, column);
+		        setFont(font);
+		        return this;
+		    }
+
+		};
+		
+		table.getColumnModel().getColumn(BookTableModel.TITLE).setCellRenderer(r);
 
 		Action delete = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				JTable table = (JTable) e.getSource();
 				int modelRow = Integer.valueOf(e.getActionCommand());
-				String id = (String) ((BookTableModel) table.getModel()).getValueAt(modelRow, BookTableModel.ID);
-				String title = (String) ((BookTableModel) table.getModel()).getValueAt(modelRow, BookTableModel.TITLE);
+				JSONObject obj = (JSONObject) data.get(modelRow);
+				String id = (String) obj.get("_id");
+				String title = (String) obj.get("title");
 				int deleteResponse = JOptionPane.showConfirmDialog(null,
 						"Do you want to delete this book: " + title + "?", "Confirm", JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
@@ -202,12 +241,21 @@ public class ViewBooksFrame extends JFrame {
 		Action info = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JTable table = (JTable) e.getSource();
+				// JTable table = (JTable) e.getSource();
 				int modelRow = Integer.valueOf(e.getActionCommand());
 				JSONObject obj = (JSONObject) data.get(modelRow);
-				
-				MoreInfoFrame frame = new MoreInfoFrame(obj);
-				frame.setVisible(true);
+
+				MoreInfoFrame frame;
+				try {
+					frame = new MoreInfoFrame(obj);
+					frame.setVisible(true);
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		};
 
