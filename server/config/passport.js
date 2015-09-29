@@ -24,7 +24,7 @@ module.exports = function(passport) {
     //     });
     // });
     passport.serializeUser( function(user, done) {
-        var sessionUser = { id: user._id, role: user.local.role }
+        var sessionUser = { id: user._id, username: user.local.username, role: user.local.role }
         done(null, sessionUser);
     })
 

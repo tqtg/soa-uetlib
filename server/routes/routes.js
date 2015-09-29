@@ -68,14 +68,19 @@ module.exports = function(app, passport) {
         res.redirect('/login');
     });
 
+    // user infor
+    app.get('/user', isLoggedIn, function(req, res, next) {
+        res.json(req.user.username);
+    });
+
     // use passport to control
     app.get('/', isLoggedIn, function(req, res, next) {
         res.sendfile('views/index.html');
     });
 
-    app.get('/*', function(req, res, next) {
-        res.redirect('/');
-    });
+    // app.get('/*', function(req, res, next) {
+    //     res.redirect('/');
+    // });
 }
 
 // route middleware to make sure a user is logged in
