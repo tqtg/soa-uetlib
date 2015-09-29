@@ -35,7 +35,7 @@ public class BookPanel extends JPanel {
 	public JScrollPane scrollPane;
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public BookPanel(String buttonName, ActionListener action) {
+	public BookPanel(String buttonName) {
 		setLayout(null);
 		nameLabel = new JLabel("Title");
 		nameLabel.setBounds(30, 30, 80, 25);
@@ -71,7 +71,7 @@ public class BookPanel extends JPanel {
 
 		button = new JButton(buttonName);
 		button.setBounds(210, 485, 80, 25);
-		button.addActionListener(action);
+//		button.addActionListener(action);
 		add(button);
 
 		categoryLabel = new JLabel("Category");
@@ -112,6 +112,15 @@ public class BookPanel extends JPanel {
 		scrollPane.setBounds(120, 380, 320, 80);
 		add(scrollPane);
 
+	}
+	
+	public BookPanel(String buttonName, ActionListener action){
+		this(buttonName);
+		this.addActionListenerToButton(action);
+	}
+	
+	public void addActionListenerToButton(ActionListener action){
+		this.button.addActionListener(action);
 	}
 
 }

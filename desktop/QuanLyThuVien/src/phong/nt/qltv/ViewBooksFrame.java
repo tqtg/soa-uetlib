@@ -2,6 +2,7 @@ package phong.nt.qltv;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +10,14 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.AbstractTableModel;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -24,26 +27,64 @@ public class ViewBooksFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
+	private JMenuBar menuBar;
+	private JSONArray data;
+	private List<Book> bookList;
+	private BookTableModel model;
 
 	public ViewBooksFrame() throws Exception {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 700, 700);
+		setTitle("Library Manager");
+		setSize(800, 800);
+		getContentPane().setLayout(new BorderLayout());
+
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+
+		JMenu optionMenu = new JMenu("Option");
+		optionMenu.setMnemonic(KeyEvent.VK_O);
+		menuBar.add(optionMenu);
+
+		JMenuItem refreshMenuItem = new JMenuItem("Refresh", KeyEvent.VK_R);
+		optionMenu.add(refreshMenuItem);
+
+		JMenuItem addBookMenuItem = new JMenuItem("Add book", KeyEvent.VK_A);
+		addBookMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AddNewBookFrame frame = new AddNewBookFrame();
+				frame.setVisible(true);
+			}
+		});
+		optionMenu.add(addBookMenuItem);
+
+		JMenuItem logOutMenuItem = new JMenuItem("Log out", KeyEvent.VK_L);
+		logOutMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				LogInFrame frame = new LogInFrame();
+				frame.setVisible(true);
+				setVisible(false);
+				dispose();
+			}
+		});
+		optionMenu.add(logOutMenuItem);
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
 
-		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.CENTER);
-
-		JSONArray data = Function.getAllBooks();
-		List<Book> bookList = new ArrayList<Book>();
+		data = Function.getAllBooks();
+		bookList = new ArrayList<Book>();
 		for (Object obj : data) {
 			JSONObject object = (JSONObject) obj;
 			bookList.add(new Book(object));
 		}
 
-		BookTableModel model = new BookTableModel(bookList);
+		model = new BookTableModel(bookList);
 		table = new JTable(model);
 
 		Action delete = new AbstractAction() {
@@ -56,7 +97,7 @@ public class ViewBooksFrame extends JFrame {
 						"Do you want to delete this book: " + title + "?", "Confirm", JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
 				if (deleteResponse == JOptionPane.NO_OPTION) {
-
+					System.out.println("Book is not deleted!");
 				} else if (deleteResponse == JOptionPane.YES_OPTION) {
 					try {
 						Function.delete(id);
@@ -81,24 +122,77 @@ public class ViewBooksFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JTable table = (JTable) e.getSource();
 				int modelRow = Integer.valueOf(e.getActionCommand());
-				// String id = (String) ((BookTableModel)
-				// table.getModel()).getValueAt(modelRow, BookTableModel.ID);
-				// System.out.println(id);
 				JSONObject obj = (JSONObject) data.get(modelRow);
-				// System.out.println((String) obj.get("_id"));
 
 				EditBookFrame frame = new EditBookFrame(obj);
 				frame.setVisible(true);
 
-				boolean response = frame.getResponseCode();
-				if (response) {
-					JSONObject newBook = frame.getNewBook();
-					((BookTableModel) table.getModel()).editRow(modelRow, new Book(newBook));
-					data.remove(modelRow);
-					data.add(modelRow, newBook);
-					System.out.println("Book edited! " + (String) newBook.get("_id"));
-				}
+				Action editOnFrame = new AbstractAction() {
 
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						String bookName = frame.panel.nameText.getText();
+						String author = frame.panel.authorText.getText();
+						int indexCategory = frame.panel.categoryBox.getSelectedIndex();
+						if (indexCategory == -1)
+							indexCategory = 0;
+						String category = Helper.CATEGORY_CODE[indexCategory];
+						String page = frame.panel.pageText.getText();
+						String publisher = frame.panel.publisherText.getText();
+						String date = frame.panel.dateText.getText();
+						String imageLink = frame.panel.imageText.getText();
+						String description = frame.panel.desText.getText();
+
+						if (bookName.equals("")) {
+							System.out.println("Error - Book has no name!");
+							JOptionPane.showMessageDialog(frame, "Plese enter the book's name!", "Error",
+									JOptionPane.ERROR_MESSAGE);
+						} else {
+							JSONObject newBook = new JSONObject();
+							newBook.put("title", bookName);
+							newBook.put("author", author);
+							newBook.put("category", category);
+							newBook.put("page", page);
+							newBook.put("publisher", publisher);
+							newBook.put("date", date);
+							newBook.put("image", imageLink);
+							newBook.put("description", description);
+							try {
+								int response = Function.editBook(frame.id, newBook);
+								if (response == 200) {
+									int result = JOptionPane.showConfirmDialog(frame, "Success!", "Infomation",
+											JOptionPane.CLOSED_OPTION);
+									if (result == 0) {
+										JSONObject newEditedBook = new JSONObject();
+										newEditedBook.put("_id", frame.id);
+										newEditedBook.put("title", bookName);
+										newEditedBook.put("author", author);
+										newEditedBook.put("category", category);
+										newEditedBook.put("publisher", publisher);
+										newEditedBook.put("date", date);
+										newEditedBook.put("image", imageLink);
+										newEditedBook.put("description", description);
+										newEditedBook.put("page", Long.parseLong(page));
+										((BookTableModel) table.getModel()).editRow(modelRow, new Book(newEditedBook));
+										data.remove(modelRow);
+										data.add(modelRow, newEditedBook);
+										System.out.println("Book edited! " + (String) newEditedBook.get("_id"));
+										frame.setVisible(false);
+										frame.dispose();
+									}
+								}
+							} catch (Exception e) {
+								JOptionPane.showMessageDialog(frame, e.getMessage(), "Error",
+										JOptionPane.ERROR_MESSAGE);
+								e.printStackTrace();
+							}
+
+						}
+
+					}
+
+				};
+				frame.panel.addActionListenerToButton(editOnFrame);
 			}
 		};
 
@@ -108,191 +202,38 @@ public class ViewBooksFrame extends JFrame {
 		Action info = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				JTable table = (JTable) e.getSource();
+				int modelRow = Integer.valueOf(e.getActionCommand());
+				JSONObject obj = (JSONObject) data.get(modelRow);
+				
+				MoreInfoFrame frame = new MoreInfoFrame(obj);
+				frame.setVisible(true);
 			}
 		};
 
 		ButtonColumn infoButtonColumn = new ButtonColumn(table, info, BookTableModel.MORE_INFO);
 		infoButtonColumn.setMnemonic(KeyEvent.VK_I);
 
-		JScrollPane jsp = new JScrollPane(table);
-		contentPane.add(jsp, BorderLayout.CENTER);
-	}
+		refreshMenuItem.addActionListener(new ActionListener() {
 
-}
-
-class Book {
-	private String id;
-	private String title;
-	private String author;
-	private String category;
-	private Long page;
-	private String publisher;
-	private String date;
-	private String image;
-	private String description;
-
-	Book(JSONObject obj) {
-		this.id = (String) obj.get("_id");
-		this.title = (String) obj.get("title");
-		this.author = (String) obj.get("author");
-		this.category = (String) obj.get("category");
-		this.page = (Long) obj.get("page");
-		this.publisher = (String) obj.get("publisher");
-		this.date = (String) obj.get("date");
-		this.image = (String) obj.get("image");
-		this.description = (String) obj.get("description");
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public String getAuthor() {
-		return author;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public Long getPage() {
-		return page;
-	}
-
-	public String getPublisher() {
-		return publisher;
-	}
-
-	public String getDate() {
-		return date;
-	}
-
-	public String getImage() {
-		return image;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-}
-
-@SuppressWarnings("serial")
-class BookTableModel extends AbstractTableModel {
-	public final static int ID = 0;
-	public final static int TITLE = 1;
-	public final static int AUTHOR = 2;
-	public final static int CATEGORY = 3;
-	public final static int PAGE = 4;
-	public final static int PUBLISHER = 5;
-	public final static int DATE = 6;
-	public final static int IMAGE = 7;
-	public final static int DESCRIPTION = 8;
-	public final static int MORE_INFO = 9;
-	public final static int EDIT = 10;
-	public final static int DELETE = 11;
-
-	private List<Book> bookList = new ArrayList<Book>();
-	private String[] columnNames = { "ID", "Title", "Author", "Category", "Page", "Publisher", "Date", "Image",
-			"Description", "", "", "" };
-
-	public BookTableModel() {
-
-	}
-
-	public BookTableModel(List<Book> bookList) {
-		this.bookList = bookList;
-	}
-
-	@Override
-	public int getColumnCount() {
-		return columnNames.length;
-	}
-
-	@Override
-	public String getColumnName(int column) {
-		return columnNames[column];
-	}
-
-	@Override
-	public int getRowCount() {
-		return bookList.size();
-	}
-
-	@Override
-	public Object getValueAt(int row, int column) {
-		if (column == MORE_INFO) {
-			return "More info...";
-		}
-		if (column == EDIT) {
-			return "Edit";
-		} else if (column == DELETE) {
-			return "Delete";
-		} else {
-			Object bookAttribute = null;
-			Book book = bookList.get(row);
-			switch (column) {
-			case ID:
-				bookAttribute = book.getId();
-				break;
-			case TITLE:
-				bookAttribute = book.getTitle();
-				break;
-			case AUTHOR:
-				bookAttribute = book.getAuthor();
-				break;
-			case CATEGORY:
-				String catCode = book.getCategory();
-				String collection;
-				if (catCode == null) {
-					collection = "";
-				} else {
-					collection = Helper.collectionOfCode(catCode);
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					data = Function.getAllBooks();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				bookAttribute = collection;
-				break;
-			case PAGE:
-				bookAttribute = book.getPage();
-				break;
-			case PUBLISHER:
-				bookAttribute = book.getPublisher();
-				break;
-			case DATE:
-				bookAttribute = book.getDate();
-				break;
-			case IMAGE:
-				bookAttribute = book.getImage();
-				break;
-			case DESCRIPTION:
-				bookAttribute = book.getDescription();
-				break;
+				bookList = new ArrayList<Book>();
+				for (Object obj : data) {
+					JSONObject object = (JSONObject) obj;
+					bookList.add(new Book(object));
+				}
+				((BookTableModel) table.getModel()).refresh(bookList);
 			}
-			return bookAttribute;
-		}
-	}
+		});
 
-	@Override
-	public boolean isCellEditable(int row, int column) {
-		if (column == MORE_INFO || column == EDIT || column == DELETE) {
-			return true;
-		}
-		return false;
+		JScrollPane jsp = new JScrollPane(table);
+		contentPane.add(jsp);
 	}
-
-	public void deleteRow(int row) {
-		bookList.remove(row);
-		fireTableRowsDeleted(row, row);
-	}
-	
-	public void editRow(int row, Book newBookData){
-		bookList.remove(row);
-		bookList.add(row, newBookData);
-		fireTableDataChanged();
-	}
-
 }

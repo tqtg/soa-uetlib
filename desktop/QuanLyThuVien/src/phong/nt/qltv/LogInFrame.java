@@ -67,21 +67,28 @@ public class LogInFrame extends JFrame implements ActionListener {
 			// send request to server
 			//
 			//
-			
+
 			boolean response = true;
-			
+
 			if (!response) {
 				System.out.println("Error - Wrong username or password!");
-				JOptionPane.showMessageDialog(this, "Wrong username or password!", "Error",
-						JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Wrong username or password!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 
 			if (response) {
 				System.out.println("Login succesfully!");
 				setVisible(false);
 				dispose();
-				ManagerFrame manager = new ManagerFrame();
-				manager.setVisible(true);
+				// ManagerFrame manager = new ManagerFrame();
+				// manager.setVisible(true);
+				ViewBooksFrame frame;
+				try {
+					frame = new ViewBooksFrame();
+					frame.setVisible(true);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 	}
