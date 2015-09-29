@@ -32,7 +32,7 @@ app.factory('soaFactory', function($http) {
 	}
 
 	services.getUserInfo = function() {
-		return $http.get(urlBase + '/user');
+		return $http.get('/user');
 	}
 	// bookService.saveBook = function(book) {
 	// 	return $http.post(urlBase, book);
