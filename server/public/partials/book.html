@@ -24,7 +24,7 @@
                                             <span class="link_a">
                                                 <div class="dropdown">
                                                     <i class="fa fa-user fa-lg"></i>
-                                                    {{getUserInformation()}}
+                                                    <div ng-if="userInfo==''">{{getUserInformation()}}</div>
                                                     WELCOME
                                                     <b>{{userInfo | uppercase}}</b>
                                                     <a class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
