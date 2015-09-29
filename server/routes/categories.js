@@ -2,7 +2,7 @@ var Category = require('../models/category.js');
 
 module.exports = function(app, mongoose, passport) {
 	/* GET all categories */
-	app.get('/categories', function(req, res, next) {
+	app.get('/categories', isLoggedIn, function(req, res, next) {
 		Category.find(function(err, categories) {
 			if (err) return next(err);
 			res.json(categories);

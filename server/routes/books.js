@@ -11,7 +11,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* GET all books */
-	app.get('/books/all', function(req, res, next) {
+	app.get('/books/all', isLoggedIn, function(req, res, next) {
 		Book.find(function(err, books) {
 			if (err) return next(err);
 			res.json(books);
@@ -19,7 +19,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* GET books listing. Limit 50 */
-	app.get('/books', function(req, res, next) {
+	app.get('/books', isLoggedIn, function(req, res, next) {
 		Book.find({}, {}, {
 			limit : 20
 		}, function(err, books) {
@@ -29,7 +29,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* GET /books/id/:id */
-	app.get('/books/id/:id', function(req, res, next) {
+	app.get('/books/id/:id', isLoggedIn, function(req, res, next) {
 		Book.findById(req.params.id, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
@@ -37,7 +37,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* GET /books/id/:id */
-	app.get('/books/page/:page', function(req, res, next) {
+	app.get('/books/page/:page', isLoggedIn, function(req, res, next) {
 		Book.find({}, {}, {
 			skip : (req.params.page - 1) * 20,
 			limit : 20
@@ -48,7 +48,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* GET /books/:category/:page */
-	app.get('/books/category/:category', function(req, res, next) {
+	app.get('/books/category/:category', isLoggedIn, function(req, res, next) {
 		Book.find({
 			'category' : req.params.category
 		}, function(err, post) {
@@ -58,7 +58,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* GET /books/:category/:page */
-	app.get('/books/category/:category/:page', function(req, res, next) {
+	app.get('/books/category/:category/:page', isLoggedIn, function(req, res, next) {
 		Book.find({
 			'category' : req.params.category
 		}, {}, {
@@ -74,7 +74,7 @@ module.exports = function(app, mongoose, passport) {
 	* Searching
 	* GET /books/search/:query
 	*/
-	app.get('/books/search/:query', function(req, res, next) {
+	app.get('/books/search/:query', isLoggedIn, function(req, res, next) {
 		Book.find({
 			'$or' : [{
 				"title": {
@@ -93,11 +93,11 @@ module.exports = function(app, mongoose, passport) {
 		})
 	});
 
-		/**
+	/**
 	* Searching
 	* GET /books/search/:query
 	*/
-	app.get('/books/search/:query/:page', function(req, res, next) {
+	app.get('/books/search/:query/:page', isLoggedIn, function(req, res, next) {
 		Book.find({
 			'$or' : [{
 				"title": {
@@ -121,7 +121,7 @@ module.exports = function(app, mongoose, passport) {
 
 
 	/* POST /books */
-	app.post('/books', function(req, res, next) {
+	app.post('/books', isAdmin, function(req, res, next) {
 		Book.create(req.body, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
@@ -129,7 +129,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* PUT /books */
-	app.put('/books', function(req, res, next) {
+	app.put('/books', isAdmin, function(req, res, next) {
 		Book.update({
 			_id: mongoose.Types.ObjectId(req.body._id)
 		}, {
@@ -142,7 +142,7 @@ module.exports = function(app, mongoose, passport) {
 	});
 
 	/* PUT /books/:id */
-	app.put('/books/:id', function(req, res, next) {
+	app.put('/books/:id', isAdmin, function(req, res, next) {
 		Book.findByIdAndUpdate(req.params.id, req.body, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
@@ -151,7 +151,7 @@ module.exports = function(app, mongoose, passport) {
 
 
 	/* DELETE /books/:id */
-	app.delete('/books/:id', function(req, res, next) {
+	app.delete('/books/:id', isAdmin, function(req, res, next) {
 		Book.findByIdAndRemove(req.params.id, req.body, function(err, post) {
 			if (err) return next(err);
 			res.json(post);
