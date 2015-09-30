@@ -5,9 +5,7 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 	$scope.userInfo = '';
 	$scope.searchQuery = '';
 	$scope.currentCategory = '';
-	$searchMode = false;
 	$scope.currentPage = 1;
-	$scope.pageLength = 108; //Number of page for all books, hand fixed the the sake of server performance
 
   $scope.clickToOpen = function (book) {
   		var cateId = book.category;
@@ -52,25 +50,35 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 		  });						
   };
    // -----------------------------------------------
-   $scope.getUserInformation = function() {
-		soaFactory.getUserInfo().then(function(data) {
-			$scope.userInfo = data.data;
-		})
-	}
-
+   // get usename
+	soaFactory.getUserInfo().then(function(data) {
+		$scope.userInfo = data.data;
+	})
 	// get categories
 	soaFactory.getCategories().then(function(data) {
 		$scope.categories = data.data;
-		$scope.getUserInformation();
 	})
+	
+	$scope.changePageMainPage = function(page){
+		if($scope.searchQuery=='' && $scope.currentCategory==''){
+			soaFactory.getByPage(page).then(function(data) {
+				$scope.books = data.data;
+			})
+		}
+	}
 
-	// get first 16 books of page 1 without category
-	soaFactory.getByPage(1).then(function(data) {
-		$scope.books = data.data;
-	})
-
+	$scope.getBooksByMainPage = function() {
+		$scope.pageLength = 108; //Number of page for all books, hand fixed the the sake of server performance
+		$scope.currentPage=1; 
+		$scope.searchQuery = '';
+		$scope.currentCategory = '';
+		$scope.changePageMainPage(1);
+		// console.log($scope.pageLength);
+	}
+	$scope.getBooksByMainPage();
+	
 	$scope.changePageBySearch = function(page){
-		if($scope.searchMode == true){
+		if($scope.searchQuery != ''){
 			soaFactory.getBySearch($scope.searchQuery, page).then(function(data) {
 				$scope.books = data.data;
 			})
@@ -79,8 +87,8 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 
 	$scope.getBooksBySearch = function(query) {
 		$scope.currentPage=1; 
-		$scope.searchMode = true;
 		$scope.searchQuery = query;
+		$scope.currentCategory = '';
 		soaFactory.getSearchResultLength(query).then(function(data) {
 			$scope.pageLength = Math.floor(data.data/16);
 		})
@@ -89,7 +97,7 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 	}
 
 	$scope.changePageByCategory = function(page){
-		if($scope.searchMode == false){
+		if($scope.currentCategory != ''){
 			soaFactory.getByCategory($scope.currentCategory, page).then(function(data) {
 				$scope.books = data.data;
 			})
@@ -99,7 +107,7 @@ app.controller('BookCtrl', function($rootScope, $scope, $http, soaFactory, ngDia
 	$scope.getBookByCategory = function(category) {
 		$scope.currentPage=1; 
 		$scope.currentCategory = category;
-		$scope.searchMode=false;
+		$scope.searchQuery = '';
 		soaFactory.getCategoryLength(category).then(function(data) {
 			$scope.pageLength = Math.floor(data.data/16);
 			// console.log($scope.pageLength);

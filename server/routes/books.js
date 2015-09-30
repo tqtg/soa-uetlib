@@ -58,7 +58,7 @@ module.exports = function(app, mongoose, passport) {
 	/* GET /books/id/:id */
 	app.get('/books/page/:page', isLoggedIn, function(req, res, next) {
 		Book.find({}, {}, {
-			skip : (req.params.page - 1) * 20,
+			skip : (req.params.page - 1) * 16,
 			limit : 16
 		}, function(err, books) {
 			if (err) return next(err);
@@ -81,7 +81,7 @@ module.exports = function(app, mongoose, passport) {
 		Book.find({
 			'category' : req.params.category
 		}, {}, {
-			skip : (req.params.page - 1) * 20,
+			skip : (req.params.page - 1) * 16,
 			limit : 16
 		}, function(err, post) {
 			if (err) return next(err);
