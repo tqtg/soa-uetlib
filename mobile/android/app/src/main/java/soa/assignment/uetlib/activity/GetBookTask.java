@@ -110,7 +110,7 @@ public class GetBookTask extends AsyncTask<String, String, String> {
                     if (bookItemList.size() > 0) {
                         ViewCategoryActivity.bookItemList.addAll(bookItemList);
                         ViewCategoryActivity.bookArrayAdapter.notifyDataSetChanged();
-                        if (bookItemList.size() < 20) ViewCategoryActivity.loadAll = true;
+                        if (bookItemList.size() < 16) ViewCategoryActivity.loadAll = true;
                         else ViewCategoryActivity.page++;
                     } else {
                         ViewCategoryActivity.loadAll = true;
@@ -120,7 +120,7 @@ public class GetBookTask extends AsyncTask<String, String, String> {
                     if (bookItemList.size() > 0) {
                         SearchActivity.bookItemList.addAll(bookItemList);
                         SearchActivity.bookArrayAdapter.notifyDataSetChanged();
-                        if (bookItemList.size() < 20) SearchActivity.loadAll = true;
+                        if (bookItemList.size() < 16) SearchActivity.loadAll = true;
                         else SearchActivity.page++;
                     } else {
                         SearchActivity.loadAll = true;
