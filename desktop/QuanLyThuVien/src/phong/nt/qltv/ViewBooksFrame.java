@@ -42,7 +42,7 @@ public class ViewBooksFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Library Manager");
 //		setSize(1400, 1400);
-		setMinimumSize(new Dimension(1400, 1000));
+		setMinimumSize(new Dimension(1400, 700));
 		getContentPane().setLayout(new BorderLayout());
 
 		menuBar = new JMenuBar();

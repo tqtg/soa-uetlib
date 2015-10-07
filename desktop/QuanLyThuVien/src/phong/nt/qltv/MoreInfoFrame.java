@@ -159,6 +159,7 @@ public class MoreInfoFrame extends JFrame {
 
 		idLabel.setText(id);
 		titleLabel.setText(title);
+		setTitle(title);
 		if (author != null && author.length() > 0)
 			authorLabel.setText(author);
 		if (category != null && category.length() > 0)

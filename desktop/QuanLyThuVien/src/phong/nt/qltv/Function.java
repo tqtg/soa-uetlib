@@ -48,7 +48,7 @@ public class Function {
 
 	// GET
 	public static JSONArray getAllBooks() throws Exception {
-		String url = IP + ":" + PORT + "/books";
+		String url = IP + ":" + PORT + "/books/all";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
