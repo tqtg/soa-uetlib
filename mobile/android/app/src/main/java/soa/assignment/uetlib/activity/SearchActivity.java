@@ -134,7 +134,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void getBooks() {
-        String url = "http://128.199.89.183:3000/books/search/" + query + "/" + String.valueOf(page);
+        String url = "http://128.199.89.183:3000/books/search/" + query + "/page/" + String.valueOf(page);
         new GetBookTask(this, 3).execute(url);
     }
 
